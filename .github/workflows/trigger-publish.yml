@@ -39,7 +39,7 @@ jobs:
             - Second Change
           draft: false
           prerelease: false
-
+      - run: npm i --force
       - run: npm ci --force
       - run: npm publish
         env:
