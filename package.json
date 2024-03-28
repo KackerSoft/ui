@@ -12,7 +12,8 @@
     "scripts": {
         "prepack": "yarn build",
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "ver-sync": "node scripts/sync-versions.js"
     },
     "devDependencies": {
         "@babel/core": "^7.22.9",
