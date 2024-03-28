@@ -40,7 +40,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - run: npm ci
+      - run: npm ci --force
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
