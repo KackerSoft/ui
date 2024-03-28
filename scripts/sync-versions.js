@@ -1,5 +1,6 @@
-import packageJson from "../package.json" assert { type: "json" };
-import fs from "fs";
+const fs = require("fs");
+const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
 
 // check if --increment flag is set
 const increment = process.argv.includes("increment");
