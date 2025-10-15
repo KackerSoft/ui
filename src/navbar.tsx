@@ -1,0 +1,46 @@
+import Link from "@/link";
+import { cn } from "./helpers";
+import { usePath } from "./router/router";
+
+export interface NavBarProps {
+  links: { name: string; href: string; icon: React.ReactNode }[];
+}
+
+export default function NavBar(props: NavBarProps) {
+  const { links } = props;
+  const path = usePath();
+  return (
+    <div className="fixed inset-x-6 flex items-center bottom-[calc(var(--safe-area-inset-bottom))] rounded-full border border-secondary-900/15 bg-primary-950/20 backdrop-blur-2xl overflow-hidden shadow-lg">
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className=" w-full justify-center text-secondary-950/60 text-center flex-1 items-center text-xl p-4 transition-all relative"
+          activeClassName="text-accent-500"
+        >
+          <div
+            className={cn(
+              "absolute -inset-4 pointer-events-none opacity-20 -translate-y-10 transition-all",
+              path === link.href && "translate-y-0",
+            )}
+            style={{
+              background:
+                "radial-gradient(50% 50% at 50% 10%, var(--color-accent-400), rgba(255, 255, 255, 0) 70%)",
+            }}
+          />
+
+          {typeof link.icon === "string" ? (
+            <i
+              className={cn(
+                path === link.href ? "fas" : "far",
+                "fa-" + link.icon,
+              )}
+            />
+          ) : (
+            link.icon
+          )}
+        </Link>
+      ))}
+    </div>
+  );
+}
