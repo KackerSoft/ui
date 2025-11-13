@@ -5,6 +5,8 @@
       "name": "bun-react-template",
       "dependencies": {
         "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
+        "@capacitor/app": "^7.1.0",
+        "@capacitor/status-bar": "^7.0.3",
         "@hugotomazi/capacitor-navigation-bar": "^4.0.1",
         "bun-plugin-tailwind": "^0.0.14",
         "jotai": "^2.15.0",
@@ -28,7 +30,11 @@
   "packages": {
     "@aashu-dubey/capacitor-statusbar-safe-area": ["@aashu-dubey/capacitor-statusbar-safe-area@4.0.0", "", { "peerDependencies": { "@capacitor/core": ">=7.0.0" } }, "sha512-oVtXyIWNatm/kK6ChQ6pVVjh5sYv1297+pfPue0iDOWEzGBzQZjFJsXxI4vRcTwgDAPMcsn4LMlPlhYhGplIzA=="],
 
+    "@capacitor/app": ["@capacitor/app@7.1.0", "", { "peerDependencies": { "@capacitor/core": ">=7.0.0" } }, "sha512-W7m09IWrUjZbo7AKeq+rc/KyucxrJekTBg0l4QCm/yDtCejE3hebxp/W2esU26KKCzMc7H3ClkUw32E9lZkwRA=="],
+
     "@capacitor/core": ["@capacitor/core@6.2.1", "", { "dependencies": { "tslib": "^2.1.0" } }, "sha512-urZwxa7hVE/BnA18oCFAdizXPse6fCKanQyEqpmz6cBJ2vObwMpyJDG5jBeoSsgocS9+Ax+9vb4ducWJn0y2qQ=="],
+
+    "@capacitor/status-bar": ["@capacitor/status-bar@7.0.3", "", { "peerDependencies": { "@capacitor/core": ">=7.0.0" } }, "sha512-JyRpVnKwHij9hgPWolF6PK+HT3e2HSPjN11/h2OmKxq8GAdPGARFLv+97eZl0pvuvm0Kka/LpiLb5whXISBg7Q=="],
 
     "@hugotomazi/capacitor-navigation-bar": ["@hugotomazi/capacitor-navigation-bar@4.0.1", "", { "peerDependencies": { "@capacitor/core": "^4.0.1 || ^5.0.0 || ^6.0.0" } }, "sha512-CtG9c2mxH1hxNvr8+PsoMhfKxoUkv17DQGqt82Y65gM4UARBe0Dp2fa8Eeo+ZzybJ1nRwSAiB4kEQ3nx5UpT1A=="],
 

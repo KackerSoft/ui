@@ -13,7 +13,7 @@ export default function Button(props: ButtonProps) {
   const {
     loading,
     children,
-    variant = "accent",
+    variant = "secondary",
     className,
     disabled,
     type,
@@ -24,26 +24,26 @@ export default function Button(props: ButtonProps) {
 
   switch (variant) {
     case "accent":
-      displayClass = "bg-accent-500 border border-accent-600 text-primary-950";
+      displayClass =
+        "bg-accent-500 border-2 border-secondary-950/10 text-primary-950";
       break;
     case "secondary":
       displayClass =
-        "bg-secondary border border-secondary text-primaryFont hover:bg-secondaryActive";
+        "bg-secondary-950/10 border-2 border-secondary-950/5 text-secondary-950";
       break;
     case "hollow":
       displayClass = "bg-transparent border border-accent text-accent";
       break;
     case "opaque":
       displayClass =
-        "bg-accent-400/10 border border-accent-400/10 text-accent-800 hover:bg-accent-400/20";
+        "bg-accent-400/10 border border-accent-400/10 text-accent-800 ";
       break;
     case "danger":
-      displayClass =
-        "bg-red-500 border border-red-500 text-primary hover:bg-red-600";
+      displayClass = "bg-red-500/20 border-2 border-red-500/10 text-red-500";
       break;
     case "warning":
       displayClass =
-        "bg-yellow-400 border border-yellow-400 text-primary hover:bg-yellow-500";
+        "bg-yellow-400/20 border-2 border-yellow-400/10 text-yellow-400";
       break;
   }
 
@@ -51,7 +51,7 @@ export default function Button(props: ButtonProps) {
     <button
       type={type || "button"}
       className={twMerge(
-        `ripple flex items-center gap-2 justify-center rounded-lg py-1 px-3 transition-all`,
+        `ripple flex items-center gap-2 justify-center rounded-lg py-2 px-3 transition-all`,
         displayClass,
         className,
         loading || disabled ? "grayscale" : "",

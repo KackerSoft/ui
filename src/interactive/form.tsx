@@ -8,57 +8,58 @@ export interface FormProps<T extends Object> {
   onSubmit: (data: T) => void;
   initialData: T;
   validate?: (data: T) => boolean;
-  children: (p: { errors: Errors<T> }) => React.ReactNode;
+  children: (p: {
+    errors: Errors<T>;
+    data: T;
+    setData: (data: T) => void;
+    setField: <K extends keyof T>(field: K, value: T[K]) => void;
+    submit: () => void;
+  }) => React.ReactNode;
 }
 
 export default function Form<T extends Object>(props: FormProps<T>) {
   const [errors, setErrors] = useState<Errors<T>>({});
+  const [form, setForm] = useState<T>(props.initialData);
+
+  const setField = <K extends keyof T>(field: K, value: T[K]) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
   const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    // set form fields to initial data
-    if (formRef.current) {
-      const form = formRef.current;
-      let traversed: string[] = [];
-      Object.entries(props.initialData).forEach(([key, value]) => {
-        const input = form.elements.namedItem(key) as HTMLInputElement;
-        if (input) {
-          traversed.push(key);
-          input.value = value as string;
-        }
-      });
+  const submit = async () => {
+    setErrors({});
+    try {
+      await props.validate?.(form);
+    } catch (error) {
+      setErrors(error as Errors<T>);
+      return;
     }
-  }, [props.initialData]);
+    try {
+      await props.onSubmit(form);
+    } catch (error) {
+      setErrors(error as Errors<T>);
+      return;
+    }
+    // clear form
+    formRef.current?.reset();
+  };
 
   return (
     <form
       ref={formRef}
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault();
-        setErrors({});
-        const formData = new FormData(e.target as HTMLFormElement);
-        const data: T = { ...props.initialData };
-        formData.forEach((value, key) => {
-          (data as any)[key] = value;
-        });
-        try {
-          await props.validate?.(data);
-        } catch (error) {
-          setErrors(error as Errors<T>);
-          return;
-        }
-        try {
-          await props.onSubmit(data);
-        } catch (error) {
-          setErrors(error as Errors<T>);
-          return;
-        }
-        // clear form
-        (e.target as HTMLFormElement).reset();
+        submit();
       }}
       className="flex flex-col gap-2"
     >
-      {props.children({ errors })}
+      {props.children({
+        errors,
+        data: form,
+        setData: setForm,
+        setField,
+        submit,
+      })}
     </form>
   );
 }

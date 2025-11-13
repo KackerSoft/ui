@@ -3,6 +3,9 @@ import { SafeAreaController } from "@aashu-dubey/capacitor-statusbar-safe-area";
 import { createStore, useAtom } from "jotai";
 import { themeAtom } from "./store";
 import { Provider as JotaiProvider } from "jotai";
+import { StatusBar, Style } from "@capacitor/status-bar";
+import { NavigationBar } from "@hugotomazi/capacitor-navigation-bar";
+import { Capacitor } from "@capacitor/core";
 
 export interface Theme {
   name: string;
@@ -75,6 +78,15 @@ export default function Provider(props: {
           );
         });
       });
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() !== "ios") {
+        StatusBar.setStyle({
+          style: theme.type === "dark" ? Style.Dark : Style.Light,
+        });
+        NavigationBar.setColor({
+          darkButtons: theme.type !== "dark",
+          color: "#000000",
+        });
+      }
     }
   };
 
@@ -106,7 +118,14 @@ export default function Provider(props: {
   }, [currentTheme, props.theme]);
 
   useEffect(() => {
-    SafeAreaController.injectCSSVariables();
+    if (Capacitor.isNativePlatform()) {
+      SafeAreaController.injectCSSVariables();
+      // (window?.screen?.orientation as any)?.lock?.("portrait");
+      StatusBar.setOverlaysWebView({ overlay: true });
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() !== "ios") {
+        NavigationBar.setTransparency({ isTransparent: true });
+      }
+    }
   }, []);
 
   return (

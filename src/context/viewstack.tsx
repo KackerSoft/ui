@@ -3,8 +3,9 @@ import { useAtom } from "jotai";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface ViewStack {
-  path: string;
+  path?: string;
   component: ReactNode;
+  state?: any;
   status: "initiated" | "active" | "background";
 }
 

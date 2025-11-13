@@ -4,13 +4,20 @@ import { usePath } from "./router/router";
 
 export interface NavBarProps {
   links: { name: string; href: string; icon: React.ReactNode }[];
+  className?: string;
 }
 
 export default function NavBar(props: NavBarProps) {
-  const { links } = props;
+  const { links, className } = props;
   const path = usePath();
+
   return (
-    <div className="fixed inset-x-6 flex items-center bottom-[calc(var(--safe-area-inset-bottom))] rounded-full border border-secondary-900/15 bg-primary-950/20 backdrop-blur-2xl overflow-hidden shadow-lg">
+    <div
+      className={cn(
+        "fixed z-50 inset-x-6 flex items-center bottom-[calc(var(--safe-area-inset-bottom,1rem))] rounded-full border border-secondary-900/15 bg-primary-950/20 backdrop-blur-2xl overflow-hidden shadow-lg opacity-100 transition-all",
+        className,
+      )}
+    >
       {links.map((link) => (
         <Link
           key={link.href}

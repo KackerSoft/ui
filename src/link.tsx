@@ -9,10 +9,12 @@ export default function Link(
   const { activeClassName, className, ...rest } = props;
   const path = usePath();
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (props.href) {
+    if (props.href && !props.href.startsWith("http")) {
       e.preventDefault();
       window.history.pushState({}, "", props.href);
-      const navEvent = new PopStateEvent("popstate");
+      const navEvent = new PopStateEvent("popstate", {
+        state: { navigationType: "push" },
+      });
       window.dispatchEvent(navEvent);
     }
   };
