@@ -21,7 +21,7 @@
   "scripts": {
     "prepare": "bun run build",
     "dev": "bunx concurrently \"bun run build:js --watch\" \"bun run build:types --watch\"",
-    "build:js": "bun build src/index.tsx --outdir dist --external react --external react-dom --external react/jsx-runtime --external react/jsx-dev-runtime",
+    "build:js": "NODE_ENV=production bun build src/index.tsx --outdir dist --external react --external react-dom --external react/jsx-runtime --external react/jsx-dev-runtime  --external react/client --external react/server --external react-compiler-runtime",
     "build:types": "tsc -p tsconfig.types.json",
     "build": "bun run build:js && bun run build:types",
     "ver-sync": "node scripts/sync-versions.js"
@@ -41,8 +41,6 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "react": "^19",
-    "react-dom": "^19",
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",

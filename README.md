@@ -1,35 +1,19 @@
-# bun-react-tailwind-template
+# Kacker UI
 
-To install dependencies:
+## Installation (local)
 
-```bash
-bun install
-```
-
-To start a development server:
+To install the dependencies, run:
 
 ```bash
-bun dev
+bun install git@github.com:KackerSoft/ui.git#<version>
 ```
 
-To run for production:
+Replace `<version>` with the desired version tag or branch name.
+
+Then to run the prepare script:
 
 ```bash
-bun start
+bun pm trust @kacker/ui
 ```
 
-## Resolving React during dev:
-
-CD into the host project's node_modules/react folder and run:
-
-```bash
-bun link
-```
-
-then CD back into Kacker UI and run:
-
-```bash
-bun link react
-```
-
-and that should resolve the issue.
+This will build the package locally so that it can be used in your project.
