@@ -19,6 +19,7 @@
     }
   },
   "scripts": {
+    "prepare": "bun run build",
     "dev": "bunx concurrently \"bun run build:js --watch\" \"bun run build:types --watch\"",
     "build:js": "bun build src/index.tsx --outdir dist --external react --external react-dom --external react/jsx-runtime --external react/jsx-dev-runtime",
     "build:types": "tsc -p tsconfig.types.json",
