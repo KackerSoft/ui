@@ -18,6 +18,7 @@ import Fallback, {
   FallbackBone,
 } from "./fallback";
 import Image, { useImage } from "./image";
+import UpdateProvider, { useAutoUpdate } from "./update";
 
 export {
   Router,
@@ -44,4 +45,6 @@ export {
   FallbackBone,
   useNavigationState,
   navigate,
+  UpdateProvider,
+  useAutoUpdate,
 };

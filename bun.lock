@@ -19,6 +19,7 @@
         "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
         "@capacitor/app": "^7.1.0",
         "@capacitor/status-bar": "^7.0.3",
+        "@capgo/capacitor-updater": "^7.27.5",
         "@hugotomazi/capacitor-navigation-bar": "^4.0.1",
         "react": "^19",
         "react-dom": "^19",
@@ -33,6 +34,8 @@
     "@capacitor/core": ["@capacitor/core@6.2.1", "", { "dependencies": { "tslib": "^2.1.0" } }, "sha512-urZwxa7hVE/BnA18oCFAdizXPse6fCKanQyEqpmz6cBJ2vObwMpyJDG5jBeoSsgocS9+Ax+9vb4ducWJn0y2qQ=="],
 
     "@capacitor/status-bar": ["@capacitor/status-bar@7.0.3", "", { "peerDependencies": { "@capacitor/core": ">=7.0.0" } }, "sha512-JyRpVnKwHij9hgPWolF6PK+HT3e2HSPjN11/h2OmKxq8GAdPGARFLv+97eZl0pvuvm0Kka/LpiLb5whXISBg7Q=="],
+
+    "@capgo/capacitor-updater": ["@capgo/capacitor-updater@7.27.5", "", { "peerDependencies": { "@capacitor/core": ">=7.0.0" } }, "sha512-3UGe8u9ve1mMekt05mbg1nijm+DHP1eD+6EhmotiGJ2WYFvaFO00ja7HzMV2WAfWszSx5gmhgLCLMxD8/RxAiA=="],
 
     "@hugotomazi/capacitor-navigation-bar": ["@hugotomazi/capacitor-navigation-bar@4.0.1", "", { "peerDependencies": { "@capacitor/core": "^4.0.1 || ^5.0.0 || ^6.0.0" } }, "sha512-CtG9c2mxH1hxNvr8+PsoMhfKxoUkv17DQGqt82Y65gM4UARBe0Dp2fa8Eeo+ZzybJ1nRwSAiB4kEQ3nx5UpT1A=="],
 
