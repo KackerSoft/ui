@@ -130,7 +130,7 @@ export default function Provider(props: {
 
   return (
     <JotaiProvider store={kuiStore}>
-      <div className="bg-primary-950 h-screen text-secondary-900">
+      <div className="h-screen text-secondary-900">
         <div id="__kui-portal-root" />
         {props.children}
       </div>

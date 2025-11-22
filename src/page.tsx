@@ -21,7 +21,7 @@ export default function Page(props: PageProps) {
     <div
       {...rest}
       className={cn(
-        `overflow-auto h-screen pb-[calc(var(--safe-area-inset-bottom,1rem)+3.5rem)] relative`,
+        `overflow-auto h-screen pb-[calc(var(--safe-area-inset-bottom,1rem)+3.5rem)] relative bg-primary-950`,
         !header && "pt-[var(--safe-area-inset-top,1rem)]",
         containerClassName,
       )}

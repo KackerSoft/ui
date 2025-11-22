@@ -19,6 +19,7 @@ import Fallback, {
 } from "./fallback";
 import Image, { useImage } from "./image";
 import UpdateProvider, { useAutoUpdate } from "./update";
+import AutoComplete from "./interactive/autocomplete";
 
 export {
   Router,
@@ -47,4 +48,5 @@ export {
   navigate,
   UpdateProvider,
   useAutoUpdate,
+  AutoComplete,
 };
