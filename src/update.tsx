@@ -98,7 +98,7 @@ export default function UpdateProvider(props: UpdateProviderProps) {
     CapacitorUpdater.notifyAppReady();
   }, []);
 
-  if (!update || platform === "web" || update.version === currentVersion)
+  if (!update || platform === "web" || update.version <= currentVersion)
     return children;
 
   // TODO : Make this component be usable under context. Let the client handle the display of the update available message.
@@ -112,6 +112,10 @@ export default function UpdateProvider(props: UpdateProviderProps) {
       >
         Download
       </a>
+      <div className="text-xs opacity-40 mt-2 px-4 absolute bottom-2 inset-x-0 text-center pb-[var(--safe-area-inset-bottom,1rem)]">
+        cb{currentVersion || deviceInfo?.build || "unknown"}-bb
+        {deviceInfo?.build || "unknown"}-ab{update.version}
+      </div>
     </div>
   );
 }
