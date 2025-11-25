@@ -62,6 +62,9 @@ export const goBack = () => {
 export default function Router(props: RouterProps) {
   const [viewStack, setViewStack] = useViewStack();
 
+  // const [succeedingComponent, setSucceedingComponent] =
+  //   useState<React.ReactNode>(null);
+
   const path = usePath();
 
   const { routes } = props;
@@ -181,7 +184,16 @@ export default function Router(props: RouterProps) {
     }
   }, [path]);
 
+  // useEffect(() => {
+  //   const currentView = viewStack[viewStack.length - 2];
+  //   const nextView = viewStack[viewStack.length - 1];
+
+  //   setSucceedingComponent(nextView?.component || null);
+  // }, [viewStack]);
+
   const showNavBar = props.mainRoutes.includes(path);
+
+  // const mainPaths = props.mainRoutes;
 
   return (
     <div className="h-screen relative overflow-hidden">

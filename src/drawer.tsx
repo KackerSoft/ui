@@ -191,7 +191,7 @@ export function DrawerContent({
           {title && (
             <h2 className="text-xl px-4 font-bold mb-4 text-center">{title}</h2>
           )}
-          <div className="max-h-[calc(100vh-200px-var(--safe-area-inset-top))] overflow-auto pb-[calc(var(--safe-area-inset-bottom)+1rem)] ">
+          <div className="max-h-[calc(100vh-200px-var(--safe-area-inset-top,0px))] overflow-auto pb-[calc(var(--safe-area-inset-bottom)+1rem)] ">
             {children}
           </div>
         </div>

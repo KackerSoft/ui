@@ -14,7 +14,7 @@ export default function NavBar(props: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed z-50 inset-x-6 flex items-center bottom-[calc(var(--safe-area-inset-bottom,1rem))] rounded-full border border-secondary-900/15 bg-primary-950/20 backdrop-blur-2xl overflow-hidden shadow-lg opacity-100 transition-all",
+        "fixed z-50 inset-x-6 flex items-center bottom-[calc(var(--safe-area-inset-bottom,1rem))] rounded-full border border-secondary-900/15 bg-primary-950/50 backdrop-blur-2xl overflow-hidden shadow-lg opacity-100 transition-all",
         className,
       )}
     >

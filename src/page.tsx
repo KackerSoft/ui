@@ -1,6 +1,7 @@
 import { Capacitor } from "@capacitor/core";
 import { cn } from "./helpers";
 import { goBack } from "./router/router";
+import { twMerge } from "tailwind-merge";
 
 export interface PageHeaderProps {
   title: string;
@@ -17,6 +18,8 @@ export interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function Page(props: PageProps) {
   const { className, containerClassName, children, header, ...rest } = props;
 
+  const platform = Capacitor.getPlatform();
+
   return (
     <div
       {...rest}
@@ -27,7 +30,13 @@ export default function Page(props: PageProps) {
       )}
     >
       {header && (
-        <div className="flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 bg-primary-950/20 backdrop-blur-2xl px-4">
+        <div
+          className={twMerge(
+            "flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 bg-primary-950/50 backdrop-blur-2xl px-4 rounded-2xl",
+            platform === "android" &&
+              "pt-[calc(var(--safe-area-inset-top,1rem)+1rem)]",
+          )}
+        >
           <div className="pb-3">
             <button
               className="flex items-center justify-center w-8 aspect-square rounded-lg"
