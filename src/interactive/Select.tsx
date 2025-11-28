@@ -31,7 +31,7 @@ export default function Select<T extends string>(props: SelectProps<T>) {
   return (
     <>
       <Drawer>
-        {(open, setOpen) => (
+        {(open) => (
           <>
             <div className="w-full">
               <DrawerTrigger>
@@ -101,7 +101,7 @@ export default function Select<T extends string>(props: SelectProps<T>) {
                     )}
                     onClick={() => {
                       onChange?.(option.value);
-                      setOpen(false);
+                      window.history.back();
                     }}
                   >
                     <div>{option.label}</div>
