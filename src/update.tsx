@@ -86,7 +86,7 @@ export default function UpdateProvider(props: UpdateProviderProps) {
     if (
       update &&
       update.version > currentVersion &&
-      update.lastCompatibleVersion < currentVersion &&
+      update.lastCompatibleVersion <= currentVersion &&
       autoUpdatePreference !== AutoUpdatePreference.DISABLE
     ) {
       handleUpdate(update);
