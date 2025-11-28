@@ -32,7 +32,7 @@ export default function Page(props: PageProps) {
       {header && (
         <div
           className={twMerge(
-            "flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 bg-primary-950/50 backdrop-blur-2xl px-4 rounded-2xl",
+            "flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 bg-primary-950/50 backdrop-blur-2xl px-4 rounded-b-2xl",
             platform === "android" &&
               "pt-[calc(var(--safe-area-inset-top,1rem)+1rem)]",
           )}

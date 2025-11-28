@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface ViewStack {
   path?: string;
-  component: ReactNode;
+  component?: ReactNode;
   state?: any;
   status: "initiated" | "active" | "background";
 }

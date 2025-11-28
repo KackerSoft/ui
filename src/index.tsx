@@ -1,5 +1,9 @@
 import "@/index.css";
-import Router, { useNavigationState, navigate } from "@/router/router";
+import Router, {
+  useNavigationState,
+  navigate,
+  registerBackHandler,
+} from "@/router/router";
 import Provider from "@/provider";
 import Link from "@/link";
 import Page, { PageHeader } from "@/page";
@@ -49,4 +53,5 @@ export {
   UpdateProvider,
   useAutoUpdate,
   AutoComplete,
+  registerBackHandler,
 };

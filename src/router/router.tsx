@@ -33,6 +33,22 @@ export function usePath() {
   return path;
 }
 
+export function usePathHash() {
+  const [hash, setHash] = useState(window.location.hash);
+  useEffect(() => {
+    const onLocationChange = (e: PopStateEvent) => {
+      setHash(window.location.hash);
+    };
+
+    window.addEventListener("popstate", onLocationChange);
+    return () => {
+      window.removeEventListener("popstate", onLocationChange);
+    };
+  }, []);
+
+  return hash.replace("#", "");
+}
+
 export function useNavigationState() {
   const [viewStack] = useAtom(viewStackAtom);
   return viewStack[viewStack.length - 1]?.state;
@@ -47,6 +63,16 @@ export const navigate = (
   else window.history.pushState(state, "", to);
   const popStateEvent = new PopStateEvent("popstate", {
     state: { navigationType: replace ? "replace" : "push", state },
+  });
+  window.dispatchEvent(popStateEvent);
+};
+
+export const registerBackHandler = (name: string, onBack: () => void) => {
+  const currentUrl = new URL(window.location.href);
+  currentUrl.hash = name;
+  window.history.pushState({}, "", currentUrl.toString());
+  const popStateEvent = new PopStateEvent("popstate", {
+    state: { navigationType: "componentStateChange", state: { onBack } },
   });
   window.dispatchEvent(popStateEvent);
 };
@@ -129,9 +155,24 @@ export default function Router(props: RouterProps) {
               state: e.state.state,
             },
           ];
+        } else if (
+          e.state &&
+          e.state.navigationType === "componentStateChange"
+        ) {
+          return [
+            ...prevStack,
+            {
+              status: "active",
+              state: e.state.state,
+            },
+          ];
         } else {
           // back navigation
           if (prevStack.length > 1) {
+            const lastView = prevStack[prevStack.length - 1];
+            if (!lastView.path && lastView.state && lastView.state.onBack) {
+              lastView.state.onBack();
+            }
             return prevStack.slice(0, -1);
           } else {
             return prevStack;

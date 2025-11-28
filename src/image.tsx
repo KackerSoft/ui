@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { cn } from "./helpers";
 import { FallbackBone } from "./fallback";
+import { registerBackHandler } from "./router/router";
 
 const getDimensions = (
   base64: string,
@@ -142,7 +143,9 @@ export default forwardRef<HTMLImageElement, ImageProps>(
             borderRadius:
               parseFloat(getComputedStyle(imgRef.current).borderRadius) || 0,
           });
-          window.history.pushState({}, "", "#image=expanded");
+          registerBackHandler("image-expanded", () => {
+            setExpanded(false);
+          });
           setTimeout(() => {
             setImageBounds({
               top: 0,
@@ -227,12 +230,6 @@ export default forwardRef<HTMLImageElement, ImageProps>(
     };
 
     const maxImageDimensions = getMaxImageDimensions();
-    const safeAreaInsetBottom =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--safe-area-inset-bottom",
-        ),
-      ) || 0;
 
     const safeAreaInsetTop =
       parseFloat(
@@ -281,7 +278,7 @@ export default forwardRef<HTMLImageElement, ImageProps>(
               <button
                 className="flex items-center justify-center w-8 text-xl aspect-square rounded-lg "
                 onClick={() => {
-                  setExpanded(false);
+                  window.history.back();
                 }}
               >
                 <i className="far fa-arrow-left" />

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Portal } from "./portal";
 import { cn } from "./helpers";
-import { useViewStack } from "./context/viewstack";
+import { registerBackHandler, usePathHash } from "./router/router";
 
 export interface DrawerProps {
   children:
@@ -20,16 +20,18 @@ export interface DrawerProps {
 
 interface DrawerContextProps {
   open: boolean;
-  setOpen: (value: boolean) => void;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
 const DrawerContext = createContext<DrawerContextProps | null>(null);
 
 export function Drawer(props: DrawerProps) {
   const [_open, _setOpen] = useState(false);
-  const [viewStackIndex, setViewStackIndex] = useState<number | null>(null);
-
-  const [viewStack, setViewStack] = useViewStack();
+  const [drawerId] = useState(
+    "drawer-" + Math.random().toString(36).substring(2, 15),
+  );
+  const pathHash = usePathHash();
 
   const open =
     typeof props.open !== "undefined" && props.onOpenChange
@@ -37,29 +39,10 @@ export function Drawer(props: DrawerProps) {
       : _open;
 
   useEffect(() => {
-    if (open && viewStackIndex === null) {
-      // push to view stack
-      const newIndex = viewStack.length;
-      setViewStackIndex(newIndex);
-      setViewStack([
-        ...viewStack,
-        {
-          component: (
-            <Drawer open={true} onOpenChange={(open) => setOpen(open)}>
-              {props.children}
-            </Drawer>
-          ),
-          status: "active",
-        },
-      ]);
-    } else {
-      // pop from view stack
-      if (viewStackIndex !== null) {
-        const newStack = [...viewStack];
-        newStack.splice(viewStackIndex, 1);
-        setViewStack(newStack);
-        setViewStackIndex(null);
-      }
+    if (open) {
+      registerBackHandler(drawerId, () => {
+        setOpen(false);
+      });
     }
   }, [open]);
 
@@ -71,11 +54,16 @@ export function Drawer(props: DrawerProps) {
     }
   };
 
-  const hidden =
-    viewStackIndex !== null && viewStackIndex < viewStack.length - 1;
+  const hidden = pathHash !== drawerId;
 
   return (
-    <DrawerContext.Provider value={{ open: open && !hidden, setOpen }}>
+    <DrawerContext.Provider
+      value={{
+        open: open && !hidden,
+        onClose: () => window.history.back(),
+        onOpen: () => setOpen(true),
+      }}
+    >
       {typeof props.children === "function"
         ? props.children(open && !hidden, setOpen)
         : props.children}
@@ -96,7 +84,7 @@ export function DrawerTrigger({ children }: { children: React.ReactElement }) {
   const existingOnClick = (children.props as any).onClick;
   const handleClick = (e: React.MouseEvent) => {
     existingOnClick?.(e);
-    ctx.setOpen(true);
+    ctx.onOpen();
   };
 
   return React.cloneElement(children, {
@@ -121,7 +109,7 @@ export function DrawerContent({
       <div
         className={cn("fixed inset-0 z-60 invisible", ctx.open && "visible")}
         onClick={(e) => {
-          if (e.target === e.currentTarget) ctx.setOpen(false);
+          if (e.target === e.currentTarget) ctx.onClose();
         }}
       >
         <div
@@ -152,7 +140,6 @@ export function DrawerContent({
                 if (Math.abs(deltaY) > Math.abs(deltaX)) {
                   if (drawerContainerRef.current) {
                     const newTop = Math.min(deltaY, window.innerHeight);
-                    console.log(newTop);
                     const newScale = Math.max(
                       0.95,
                       // determine scale based on how far the drawer has been dragged down, output between 0.95 and 1
@@ -168,7 +155,7 @@ export function DrawerContent({
 
                 // If dragged down more than 100px, close the drawer
                 if (deltaY > 100) {
-                  ctx.setOpen(false);
+                  ctx.onClose();
                 }
 
                 // Reset styles
