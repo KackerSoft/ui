@@ -15,16 +15,24 @@ export enum AutoUpdatePreference {
 export type UpdateBundle = {
   version: number;
   lastCompatibleVersion: number;
+  lastMandatoryVersion: number;
   bundleUrl: string;
 };
+
+export interface UpdateContentProps {
+  update: UpdateBundle;
+  currentVersion: number;
+}
 
 export interface UpdateProviderProps {
   children: React.ReactNode;
   checkUpdate: (
     preference: AutoUpdatePreference,
   ) => Promise<UpdateBundle | null>;
-  playStoreUrl: string;
-  appStoreUrl: string;
+  mandatoryUpdateAvailableComponent: (
+    props: UpdateContentProps,
+  ) => React.ReactNode;
+  updatingComponent?: (props: UpdateContentProps) => React.ReactNode;
 }
 
 export function useAutoUpdate() {
@@ -55,7 +63,12 @@ export function useDeviceInfo() {
 
 export default function UpdateProvider(props: UpdateProviderProps) {
   const { autoUpdatePreference } = useAutoUpdate();
-  const { children, checkUpdate, playStoreUrl, appStoreUrl } = props;
+  const {
+    children,
+    checkUpdate,
+    mandatoryUpdateAvailableComponent,
+    updatingComponent,
+  } = props;
   const [update, setUpdate] = useState<UpdateBundle | null>(null);
   const [currentBundle, setCurrentBundle] = useAtom(currentBundleAtom);
   const deviceInfo = useDeviceInfo();
@@ -82,13 +95,18 @@ export default function UpdateProvider(props: UpdateProviderProps) {
     }
   };
 
+  const canAutoUpdate =
+    update &&
+    update.version > currentVersion &&
+    update.lastCompatibleVersion <= currentVersion &&
+    update.lastMandatoryVersion <= currentVersion &&
+    autoUpdatePreference !== AutoUpdatePreference.DISABLE;
+
+  const mandatoryUpdateRequired =
+    update && update.lastMandatoryVersion > currentVersion;
+
   useEffect(() => {
-    if (
-      update &&
-      update.version > currentVersion &&
-      update.lastCompatibleVersion <= currentVersion &&
-      autoUpdatePreference !== AutoUpdatePreference.DISABLE
-    ) {
+    if (canAutoUpdate) {
       handleUpdate(update);
     }
   }, [update]);
@@ -98,24 +116,21 @@ export default function UpdateProvider(props: UpdateProviderProps) {
     CapacitorUpdater.notifyAppReady();
   }, []);
 
-  if (!update || platform === "web" || update.version <= currentVersion)
-    return children;
+  if (canAutoUpdate)
+    return updatingComponent ? (
+      <>
+        {updatingComponent({
+          update,
+          currentVersion,
+        })}
+      </>
+    ) : null;
 
-  // TODO : Make this component be usable under context. Let the client handle the display of the update available message.
-  return (
-    <div className="fixed inset-0 bg-primary-950 text-secondary-950 flex items-center justify-center flex-col text-center p-6 gap-4">
-      An update is available. Please download the latest version from the{" "}
-      {platform === "ios" ? "App Store" : "Google Play Store"}
-      <a
-        className="bg-accent-500 text-primary-950 px-4 py-2 rounded-xl font-bold"
-        href={platform === "ios" ? appStoreUrl : playStoreUrl}
-      >
-        Download
-      </a>
-      <div className="text-xs opacity-40 mt-2 px-4 absolute bottom-2 inset-x-0 text-center pb-[var(--safe-area-inset-bottom,1rem)]">
-        cb{currentVersion || deviceInfo?.build || "unknown"}-bb
-        {deviceInfo?.build || "unknown"}-ab{update.version}
-      </div>
-    </div>
-  );
+  if (mandatoryUpdateRequired) {
+    return mandatoryUpdateAvailableComponent({
+      update,
+      currentVersion,
+    });
+  }
+  return children;
 }
