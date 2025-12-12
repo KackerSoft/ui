@@ -24,6 +24,7 @@ import Fallback, {
 import Image, { useImage } from "./image";
 import UpdateProvider, { useAutoUpdate } from "./update";
 import AutoComplete from "./interactive/autocomplete";
+import Toggle from "./interactive/Toggle";
 
 export {
   Router,
@@ -54,4 +55,5 @@ export {
   useAutoUpdate,
   AutoComplete,
   registerBackHandler,
+  Toggle,
 };
