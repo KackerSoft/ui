@@ -14,7 +14,7 @@ Replace `<version>` with the desired version tag or branch name.
 
 To develop and use the package simultaneously do the following steps:
 
-1. Install the package in your desired package with installation steps.
+1. Install the package in your desired project with installation steps.
 
 2. In the project that you are using prepare the script:
     ```bash
