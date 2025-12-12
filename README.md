@@ -10,7 +10,7 @@ bun install git@github.com:KackerSoft/ui.git#<version>
 
 Replace `<version>` with the desired version tag or branch name.
 
-## Development
+## Development (local)
 
 To develop and use the package simultaneously do the following steps:
 
