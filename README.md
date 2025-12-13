@@ -5,10 +5,8 @@
 To install the dependencies, install the package using:
 
 ```bash
-bun install git@github.com:KackerSoft/ui.git#<version>
+bun install https://github.com/KackerSoft/ui.git
 ```
-
-Replace `<version>` with the desired version tag or branch name.
 
 ## Development (local)
 
