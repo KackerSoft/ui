@@ -1,6 +1,5 @@
 import { cn } from "@/helpers";
 import React, { forwardRef, useCallback } from "react";
-import { twMerge } from "tailwind-merge";
 
 export type ToggleSize = "sm" | "md" | "lg";
 export type ToggleVariant =
@@ -117,6 +116,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
       aria-disabled={disabled || undefined}
       onClick={handleToggle}
       onKeyDown={onKeyDown}
+      type="button"
       disabled={disabled}
       className={cn(
         `inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed ${className}`,
