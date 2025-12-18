@@ -119,7 +119,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
       type="button"
       disabled={disabled}
       className={cn(
-        `inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed ${className}`,
+        "inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed",className,
       )}
       {...rest}
     >
