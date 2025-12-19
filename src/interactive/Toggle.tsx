@@ -11,8 +11,11 @@ export type ToggleVariant =
   | "success"
   | "warning";
 
-  export interface ToggleProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type" | "onChange"> {
+export interface ToggleProps
+  extends Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    "type" | "onChange"
+  > {
   checked?: boolean;
   defaultChecked?: boolean;
   onChange?: (next: boolean) => void;
@@ -26,25 +29,26 @@ export type ToggleVariant =
 
 const sizeStyles: Record<
   ToggleSize,
-  { track: string; thumb: string; translate: string; thumbTranslateY?: string }
+  {
+    track: string;
+    thumb: string;
+    translate: string;
+  }
 > = {
   sm: {
     track: "w-9 h-5",
     thumb: "w-4 h-4",
-    translate: "translate-x-4",
-    thumbTranslateY: "-translate-y-1/2",
+    translate: "translate-x-[14px]",
   },
   md: {
     track: "w-11 h-6",
     thumb: "w-5 h-5",
-    translate: "translate-x-5",
-    thumbTranslateY: "-translate-y-1/2",
+    translate: "translate-x-[18px]",
   },
   lg: {
-    track: "w-14 h-8",
+    track: "w-14 h-7",
     thumb: "w-6 h-6",
-    translate: "translate-x-6",
-    thumbTranslateY: "-translate-y-1/2",
+    translate: "translate-x-[26px]",
   },
 };
 
@@ -54,7 +58,7 @@ const variantOnBg: Record<ToggleVariant, string> = {
   hollow: "bg-transparent border-accent-500/5",
   opaque: "bg-accent-400/20 border-accent-400/20",
   danger: "bg-red-500/20 border-red-500/20",
-  success: "bg-green-500 border-gray-500/50",
+  success: "bg-green-500 border-green-500/50",
   warning: "bg-yellow-400/20 border-yellow-400/20",
 };
 
@@ -64,8 +68,8 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     defaultChecked,
     onChange,
     disabled = false,
-    size = "md",
-    variant = "secondary",
+    size = "lg",
+    variant = "accent",
     className = "",
     id,
     ...rest
@@ -101,12 +105,6 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
     }
   };
 
-  // base track for unchecked + checked variant
-  const trackBase =
-    "relative inline-block rounded-full transition-colors duration-200 ease-in-out border";
-
-  const checkedTrackBg = variantOnBg[variant];
-
   return (
     <button
       id={id}
@@ -119,24 +117,27 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(function Toggle(
       type="button"
       disabled={disabled}
       className={cn(
-        "inline-flex items-center rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed",className,
+        "inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded-full disabled:opacity-60 disabled:cursor-not-allowed",
+        className,
       )}
       {...rest}
     >
+      {/* Track */}
       <span
-        // track
         className={cn(
-          trackBase,
+          "relative inline-flex items-center rounded-full border transition-colors duration-200",
           styles.track,
-          currentChecked ? checkedTrackBg : "bg-transparent border-gray-500/50",
+          currentChecked
+            ? variantOnBg[variant]
+            : "bg-transparent border-gray-500/50",
         )}
       >
-        {/* thumb */}
+        {/* Thumb */}
         <span
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 left-1 transition-transform duration-200 ease-in-out transform bg-white rounded-full shadow",
+            "absolute left-0.5 bg-white rounded-full shadow transition-transform duration-200 ease-in-out",
             styles.thumb,
-            currentChecked ? styles.translate : "translate-x-0",
+            currentChecked && styles.translate,
           )}
         />
       </span>
