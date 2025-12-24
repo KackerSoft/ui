@@ -86,7 +86,7 @@ export default function UpdateProvider(props: UpdateProviderProps) {
       // Reset current bundle as the base build is now newer
       setCurrentBundle(null);
     }
-  }, [deviceInfo, currentBundle, platform]);
+  }, [deviceInfo, currentBundle, platform, setCurrentBundle]);
 
   useEffect(() => {
     if (platform === "web") return;
