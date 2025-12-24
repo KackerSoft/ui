@@ -24,7 +24,9 @@
     "build:js": "NODE_ENV=production bun build src/index.tsx --outdir dist --external react --external react-dom --external react/jsx-runtime --external react/jsx-dev-runtime  --external react/client --external react/server --external react-compiler-runtime",
     "build:types": "tsc -p tsconfig.types.json",
     "build": "bun run build:js && bun run build:types",
-    "ver-sync": "node scripts/sync-versions.js"
+    "ver-sync": "node scripts/sync-versions.js",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "bun-plugin-tailwind": "^0.0.14",
@@ -33,18 +35,30 @@
     "tailwindcss": "^4.0.6"
   },
   "peerDependencies": {
-    "@capgo/capacitor-updater": "^7.27.5",
     "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
     "@capacitor/app": "^7.1.0",
     "@capacitor/status-bar": "^7.0.3",
+    "@capgo/capacitor-updater": "^7.27.5",
     "@hugotomazi/capacitor-navigation-bar": "^4.0.1",
     "react": "^19",
     "react-dom": "^19"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-links": "^10.1.10",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/react": "^10.1.10",
+    "@storybook/react-vite": "^10.1.10",
+    "@storybook/test": "^8.6.14",
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prettier": "^3.6.2"
+    "@vitejs/plugin-react": "^5.1.2",
+    "prettier": "^3.6.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "storybook": "^10.1.10",
+    "vite": "^7.3.0"
   }
 }
