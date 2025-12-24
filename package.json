@@ -19,7 +19,6 @@
     }
   },
   "scripts": {
-    "prepare": "bun run build",
     "dev": "bunx concurrently \"bun run build:js --watch\" \"bun run build:types --watch\"",
     "build:js": "NODE_ENV=production bun build src/index.tsx --outdir dist --external react --external react-dom --external react/jsx-runtime --external react/jsx-dev-runtime  --external react/client --external react/server --external react-compiler-runtime",
     "build:types": "tsc -p tsconfig.types.json",
@@ -46,10 +45,10 @@
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
-    "@storybook/addon-links": "^10.1.10",
+    "@storybook/addon-links": "^8.6.14",
     "@storybook/blocks": "^8.6.14",
-    "@storybook/react": "^10.1.10",
-    "@storybook/react-vite": "^10.1.10",
+    "@storybook/react": "^8.6.14",
+    "@storybook/react-vite": "^8.6.14",
     "@storybook/test": "^8.6.14",
     "@types/bun": "latest",
     "@types/react": "^19",
@@ -58,7 +57,7 @@
     "prettier": "^3.6.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "storybook": "^10.1.10",
+    "storybook": "^8.6.14",
     "vite": "^7.3.0"
   }
 }

@@ -18,6 +18,13 @@ const config: StorybookConfig = {
       config.resolve.alias = {
         ...config.resolve.alias,
         "@": path.resolve(__dirname, "../src"),
+        // Mock Capacitor dependencies
+        "@capacitor/app": path.resolve(__dirname, "./mocks/capacitor-app.ts"),
+        "@capacitor/core": path.resolve(__dirname, "./mocks/capacitor-core.ts"),
+        "@capacitor/status-bar": path.resolve(__dirname, "./mocks/capacitor-status-bar.ts"),
+        "@capgo/capacitor-updater": path.resolve(__dirname, "./mocks/capacitor-updater.ts"),
+        "@aashu-dubey/capacitor-statusbar-safe-area": path.resolve(__dirname, "./mocks/capacitor-statusbar-safe-area.ts"),
+        "@hugotomazi/capacitor-navigation-bar": path.resolve(__dirname, "./mocks/capacitor-navigation-bar.ts"),
       };
     }
     return config;
