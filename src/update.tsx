@@ -77,6 +77,17 @@ export default function UpdateProvider(props: UpdateProviderProps) {
   const currentVersion =
     currentBundle?.version || parseInt(deviceInfo?.build || "0");
 
+  // Check if base build is greater than current bundle version
+  // This can happen if the app auto-updates from the play store
+  useEffect(() => {
+    if (platform === "web") return;
+    const baseBuild = parseInt(deviceInfo?.build || "0");
+    if (currentBundle && baseBuild > currentBundle.version) {
+      // Reset current bundle as the base build is now newer
+      setCurrentBundle(null);
+    }
+  }, [deviceInfo, currentBundle, platform]);
+
   useEffect(() => {
     if (platform === "web") return;
     checkUpdate(autoUpdatePreference).then(setUpdate);
