@@ -38,7 +38,6 @@ export const useImage = (imageUrl?: string) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", imageUrl, true);
     xhr.responseType = "blob";
-    xhr.withCredentials = false;
 
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
@@ -52,7 +51,10 @@ export const useImage = (imageUrl?: string) => {
         const blob = xhr.response;
 
         // Verify if it's an image by checking the MIME type
-        if (!blob.type.startsWith("image/")) {
+        if (
+          !blob.type.startsWith("image/") &&
+          !blob.type.startsWith("application/octet-stream")
+        ) {
           setError(true);
           setLoadingPercent(null);
           setImgSrc(null);
