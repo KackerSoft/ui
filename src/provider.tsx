@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import "@/index.css";
+
+import { createContext, useContext, useEffect, useState } from "react";
 import { SafeAreaController } from "@aashu-dubey/capacitor-statusbar-safe-area";
 import { createStore, useAtom } from "jotai";
 import { themeAtom } from "./store";
 import { Provider as JotaiProvider } from "jotai";
 import { StatusBar, Style } from "@capacitor/status-bar";
-import { NavigationBar } from "@hugotomazi/capacitor-navigation-bar";
 import { Capacitor } from "@capacitor/core";
+import { NavigationBar } from "@hugotomazi/capacitor-navigation-bar";
 
 export interface Theme {
   name: string;
@@ -61,6 +63,46 @@ export interface ThemeConfig {
 
 const kuiStore = createStore();
 
+const ThemeContext = createContext<ThemeConfig | undefined>(undefined);
+
+export function useTheme() {
+  const [currentTheme, setCurrentTheme] = useAtom(themeAtom);
+  const themeConfig = useContext(ThemeContext);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setDark(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setDark(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  const resolvedTheme =
+    currentTheme === "system"
+      ? dark
+        ? themeConfig?.defaultDarkTheme || "dark"
+        : themeConfig?.defaultLightTheme || "light"
+      : currentTheme;
+
+  const activeTheme = themeConfig?.themes?.find(
+    (t) => t.name === resolvedTheme,
+  );
+
+  return {
+    currentTheme,
+    setCurrentTheme,
+    resolvedTheme,
+    activeTheme,
+  };
+}
+
 export default function Provider(props: {
   children?: React.ReactNode;
   theme?: ThemeConfig;
@@ -87,12 +129,16 @@ export default function Provider(props: {
           color: "#000000",
         });
       }
+    } else {
+      console.warn(
+        `Theme ${themeName} not found. Available themes:`,
+        props.theme?.themes.map((t) => t.name),
+      );
     }
   };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
     const handleChange = (e: MediaQueryListEvent) => {
       if (currentTheme === "system") {
         const newTheme = e.matches
@@ -130,10 +176,12 @@ export default function Provider(props: {
 
   return (
     <JotaiProvider store={kuiStore}>
-      <div className="h-screen text-secondary-900">
-        <div id="__kui-portal-root" />
-        {props.children}
-      </div>
+      <ThemeContext.Provider value={props.theme}>
+        <div className="h-screen text-secondary-900">
+          <div id="__kui-portal-root" />
+          {props.children}
+        </div>
+      </ThemeContext.Provider>
     </JotaiProvider>
   );
 }

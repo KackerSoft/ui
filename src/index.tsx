@@ -1,10 +1,9 @@
-import "@/index.css";
 import Router, {
   useNavigationState,
   navigate,
   registerBackHandler,
 } from "@/router/router";
-import Provider from "@/provider";
+import Provider, { useTheme } from "@/provider";
 import Link from "@/link";
 import Page, { PageHeader } from "@/page";
 import Input from "./interactive/Input";
@@ -25,6 +24,8 @@ import Image, { useImage } from "./image";
 import UpdateProvider, { useAutoUpdate } from "./update";
 import AutoComplete from "./interactive/autocomplete";
 import Toggle from "./interactive/Toggle";
+import PullToRefresh from "./pullToRefresh";
+import OTP from "./interactive/otp";
 
 export {
   Router,
@@ -56,4 +57,7 @@ export {
   AutoComplete,
   registerBackHandler,
   Toggle,
+  useTheme,
+  PullToRefresh,
+  OTP,
 };

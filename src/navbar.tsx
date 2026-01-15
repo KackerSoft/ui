@@ -22,7 +22,10 @@ export default function NavBar(props: NavBarProps) {
         <Link
           key={link.href}
           href={link.href}
-          className=" w-full justify-center text-secondary-950/60 text-center flex-1 items-center text-xl p-4 transition-all relative"
+          className={cn(
+            "w-full justify-center text-secondary-950/60 text-center flex flex-1 items-center text-xl p-5 transition-all relative",
+            typeof link.icon !== "string" && "py-0",
+          )}
           activeClassName="text-accent-500"
         >
           <div

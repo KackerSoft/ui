@@ -61,7 +61,9 @@ export function useDeviceInfo() {
   return deviceInfo;
 }
 
-export default function UpdateProvider(props: UpdateProviderProps) {
+export default function UpdateProvider(
+  props: UpdateProviderProps,
+): React.ReactNode {
   const { autoUpdatePreference } = useAutoUpdate();
   const {
     children,
