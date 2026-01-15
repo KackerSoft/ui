@@ -38,6 +38,7 @@ export const useImage = (imageUrl?: string) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", imageUrl, true);
     xhr.responseType = "blob";
+    xhr.withCredentials = false;
 
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
