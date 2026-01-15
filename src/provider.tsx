@@ -65,7 +65,12 @@ const kuiStore = createStore();
 
 const ThemeContext = createContext<ThemeConfig | undefined>(undefined);
 
-export function useTheme() {
+export function useTheme(): {
+  currentTheme: string;
+  setCurrentTheme: (theme: string) => void;
+  resolvedTheme: string;
+  activeTheme: Theme | undefined;
+} {
   const [currentTheme, setCurrentTheme] = useAtom(themeAtom);
   const themeConfig = useContext(ThemeContext);
   const [dark, setDark] = useState(false);

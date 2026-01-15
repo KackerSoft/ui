@@ -35,7 +35,11 @@ export interface UpdateProviderProps {
   updatingComponent?: (props: UpdateContentProps) => React.ReactNode;
 }
 
-export function useAutoUpdate() {
+export function useAutoUpdate(): {
+  readonly autoUpdatePreference: AutoUpdatePreference;
+  readonly setAutoUpdatePreference: (update: AutoUpdatePreference) => void;
+  readonly currentVersion: number | undefined;
+} {
   const [autoUpdatePreference, setAutoUpdatePreference] =
     useAtom(autoUpdateAtom);
   const [currentBundle] = useAtom(currentBundleAtom);
