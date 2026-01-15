@@ -7,7 +7,7 @@ import { themeAtom } from "./store";
 import { Provider as JotaiProvider } from "jotai";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
-import { NavigationBar } from "@hugotomazi/capacitor-navigation-bar";
+import { NavigationBar } from "@capgo/capacitor-navigation-bar";
 
 export interface Theme {
   name: string;
@@ -124,9 +124,9 @@ export default function Provider(props: {
         StatusBar.setStyle({
           style: theme.type === "dark" ? Style.Dark : Style.Light,
         });
-        NavigationBar.setColor({
+        NavigationBar.setNavigationBarColor({
           darkButtons: theme.type !== "dark",
-          color: "#000000",
+          color: "TRANSPARENT",
         });
       }
     } else {
@@ -168,9 +168,6 @@ export default function Provider(props: {
       SafeAreaController.injectCSSVariables();
       // (window?.screen?.orientation as any)?.lock?.("portrait");
       StatusBar.setOverlaysWebView({ overlay: true });
-      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() !== "ios") {
-        NavigationBar.setTransparency({ isTransparent: true });
-      }
     }
   }, []);
 

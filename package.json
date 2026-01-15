@@ -33,11 +33,11 @@
     "tailwindcss": "^4.0.6"
   },
   "peerDependencies": {
-    "@capgo/capacitor-updater": "^7.27.5",
     "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
+    "@capgo/capacitor-navigation-bar": "7.3.18",
     "@capacitor/app": "^7.1.0",
     "@capacitor/status-bar": "^7.0.3",
-    "@hugotomazi/capacitor-navigation-bar": "^4.0.1",
+    "@capgo/capacitor-updater": "^7.27.5",
     "react": "^19",
     "react-dom": "^19"
   },
