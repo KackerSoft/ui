@@ -18,9 +18,9 @@ export default function Textarea(props: TextareaProps) {
   return (
     <div className={twMerge("w-full", outerClassName)}>
       {label && <div className="text-sm mb-2 text-gray-500">{label}</div>}
-      <div className="bg-primary-800/20 border border-secondary-950/10 rounded-lg overflow-hidden flex items-stretch">
+      <div className="bg-primary-800/20 border border-primary-50/10 rounded-lg overflow-hidden flex items-stretch">
         {props.left && (
-          <div className="bg-secondary-950/10 border-r border-r-secondary-950/10 px-3 flex justify-center items-center">
+          <div className="bg-primary-950/10 border-r border-r-primary-50/10 px-3 flex justify-center items-center">
             {props.left}
           </div>
         )}
@@ -32,7 +32,7 @@ export default function Textarea(props: TextareaProps) {
           {...rest}
         />
         {props.right && (
-          <div className="bg-secondary-950/10 border-l border-l-secondary-950/10 px-3 flex justify-center items-center">
+          <div className="bg-primary-50/10 border-l border-l-primary-50/10 px-3 flex justify-center items-center">
             {props.right}
           </div>
         )}

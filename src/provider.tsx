@@ -26,19 +26,6 @@ export interface Theme {
       900: string;
       950: string;
     };
-    secondary: {
-      50: string;
-      100: string;
-      200: string;
-      300: string;
-      400: string;
-      500: string;
-      600: string;
-      700: string;
-      800: string;
-      900: string;
-      950: string;
-    };
     accent: {
       50: string;
       100: string;
@@ -65,10 +52,11 @@ const kuiStore = createStore();
 
 const ThemeContext = createContext<ThemeConfig | undefined>(undefined);
 
-export function useTheme(): {
+export function useTheme(onChange?: (theme: Theme) => void): {
   currentTheme: string;
   setCurrentTheme: (theme: string) => void;
   resolvedTheme: string;
+  systemTheme: Theme | undefined;
   activeTheme: Theme | undefined;
 } {
   const [currentTheme, setCurrentTheme] = useAtom(themeAtom);
@@ -100,74 +88,56 @@ export function useTheme(): {
     (t) => t.name === resolvedTheme,
   );
 
+  const systemThemeName = dark
+    ? themeConfig?.defaultDarkTheme || "dark"
+    : themeConfig?.defaultLightTheme || "light";
+
+  const systemTheme = themeConfig?.themes?.find(
+    (t) => t.name === systemThemeName,
+  );
+
+  useEffect(() => {
+    if (activeTheme) {
+      onChange?.(activeTheme);
+    }
+  }, [activeTheme]);
+
   return {
     currentTheme,
     setCurrentTheme,
     resolvedTheme,
+    systemTheme,
     activeTheme,
   };
+}
+
+function ThemeUpdater() {
+  useTheme((theme) => {
+    Object.entries(theme.properties).forEach(([key, value]) => {
+      Object.entries(value).forEach(([shade, color]) => {
+        document.documentElement.style.setProperty(
+          `--kui-color-${key}-${shade}`,
+          color,
+        );
+      });
+    });
+    if (Capacitor.isNativePlatform() && Capacitor.getPlatform() !== "ios") {
+      StatusBar.setStyle({
+        style: theme.type === "dark" ? Style.Dark : Style.Light,
+      });
+      NavigationBar.setNavigationBarColor({
+        darkButtons: theme.type !== "dark",
+        color: "TRANSPARENT",
+      });
+    }
+  });
+  return null;
 }
 
 export default function Provider(props: {
   children?: React.ReactNode;
   theme?: ThemeConfig;
 }) {
-  const [currentTheme, setCurrentTheme] = useAtom(themeAtom);
-
-  const applyTheme = (themeName: string) => {
-    const theme = props.theme?.themes.find((t) => t.name === themeName);
-    if (theme) {
-      Object.entries(theme.properties).forEach(([key, value]) => {
-        Object.entries(value).forEach(([shade, color]) => {
-          document.documentElement.style.setProperty(
-            `--kui-color-${key}-${shade}`,
-            color,
-          );
-        });
-      });
-      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() !== "ios") {
-        StatusBar.setStyle({
-          style: theme.type === "dark" ? Style.Dark : Style.Light,
-        });
-        NavigationBar.setNavigationBarColor({
-          darkButtons: theme.type !== "dark",
-          color: "TRANSPARENT",
-        });
-      }
-    } else {
-      console.warn(
-        `Theme ${themeName} not found. Available themes:`,
-        props.theme?.themes.map((t) => t.name),
-      );
-    }
-  };
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (currentTheme === "system") {
-        const newTheme = e.matches
-          ? props.theme?.defaultDarkTheme || "dark"
-          : props.theme?.defaultLightTheme || "light";
-        applyTheme(newTheme);
-      }
-    };
-
-    if (currentTheme !== "system") {
-      applyTheme(currentTheme);
-    } else {
-      const newTheme = mediaQuery.matches
-        ? props.theme?.defaultDarkTheme || "dark"
-        : props.theme?.defaultLightTheme || "light";
-      applyTheme(newTheme);
-    }
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, [currentTheme, props.theme]);
-
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
       SafeAreaController.injectCSSVariables();
@@ -179,7 +149,8 @@ export default function Provider(props: {
   return (
     <JotaiProvider store={kuiStore}>
       <ThemeContext.Provider value={props.theme}>
-        <div className="h-screen text-secondary-900">
+        <ThemeUpdater />
+        <div className="h-screen text-primary-50">
           <div id="__kui-portal-root" />
           {props.children}
         </div>

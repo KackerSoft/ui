@@ -54,7 +54,7 @@ const sizeStyles: Record<
 
 const variantOnBg: Record<ToggleVariant, string> = {
   accent: "bg-accent-500 border-accent-500",
-  secondary: "bg-secondary-950/30 border-secondary-950/30",
+  secondary: "bg-primary-50/30 border-primary-50/30",
   hollow: "bg-transparent border-accent-500/5",
   opaque: "bg-accent-400/20 border-accent-400/20",
   danger: "bg-red-500/20 border-red-500/20",

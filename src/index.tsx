@@ -26,6 +26,11 @@ import AutoComplete from "./interactive/autocomplete";
 import Toggle from "./interactive/Toggle";
 import PullToRefresh from "./pullToRefresh";
 import OTP from "./interactive/otp";
+import Menu from "./menu";
+import Chip from "./chip";
+import "src/index.css";
+import Slider from "./interactive/slider";
+import { SnapScroll, SnapScrollItem } from "./interactive/snap-scroll";
 
 export {
   Router,
@@ -60,4 +65,9 @@ export {
   useTheme,
   PullToRefresh,
   OTP,
+  Menu,
+  Chip,
+  Slider,
+  SnapScroll,
+  SnapScrollItem,
 };

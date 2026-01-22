@@ -6,7 +6,7 @@ export default function Link(
     activeClassName?: string;
   },
 ) {
-  const { activeClassName, className, ...rest } = props;
+  const { activeClassName, className, onClick, ...rest } = props;
   const path = usePath();
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (props.href && !props.href.startsWith("http")) {
@@ -17,6 +17,8 @@ export default function Link(
       });
       window.dispatchEvent(navEvent);
     }
+    // Call the user's onClick handler if provided
+    onClick?.(e);
   };
 
   return (

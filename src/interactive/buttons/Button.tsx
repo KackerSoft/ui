@@ -25,11 +25,11 @@ export default function Button(props: ButtonProps) {
   switch (variant) {
     case "accent":
       displayClass =
-        "bg-accent-500 border-2 border-secondary-950/10 text-primary-950";
+        "bg-accent-500 border-2 border-primary-50/10 text-primary-950";
       break;
     case "secondary":
       displayClass =
-        "bg-secondary-950/10 border-2 border-secondary-950/5 text-secondary-950";
+        "bg-primary-50/10 border-2 border-primary-50/5 text-primary-50";
       break;
     case "hollow":
       displayClass = "bg-transparent border border-accent text-accent";

@@ -37,7 +37,7 @@ export default function Select<T extends string>(props: SelectProps<T>) {
               <DrawerTrigger>
                 <button
                   className={twMerge(
-                    "flex justify-between items-center gap-2 bg-primary-800/50 border-2 border-secondary-950/5 rounded-xl ripple pl-3 py-2.75 w-full relative",
+                    "flex justify-between items-center gap-2 bg-primary-800/50 border-2 border-primary-50/5 rounded-xl ripple pl-3 py-2.75 w-full relative",
                     !!valueOption && "pt-4 pb-1.5",
                     className,
                   )}

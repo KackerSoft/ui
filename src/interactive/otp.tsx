@@ -85,7 +85,7 @@ export default function OTP({
           disabled={disabled}
           className="
             h-12 w-12
-            bg-primary-800/50 border-2 border-secondary-950/5 rounded-xl 
+            bg-primary-800/50 border-2 border-primary-50/5 rounded-xl 
             text-center text-lg font-semibold
             focus:border-accent-500 focus:ring-2 focus:ring-accent-500
             outline-none

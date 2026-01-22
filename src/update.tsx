@@ -56,6 +56,7 @@ export function useDeviceInfo() {
 
   useEffect(() => {
     const getDeviceInfo = async () => {
+      if (Capacitor.getPlatform() === "web") return;
       const info = await App.getInfo();
       setDeviceInfo(info);
     };

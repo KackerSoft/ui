@@ -115,7 +115,7 @@ export function DrawerContent({
         <div
           ref={drawerContainerRef}
           className={cn(
-            "absolute bottom-0 inset-x-0 bg-primary-800/20 backdrop-blur-2xl rounded-t-[2.5rem] border border-secondary-950/10 shadow-lg transition-all duration-300 ease-in-out translate-y-full will-change-transform",
+            "absolute bottom-0 inset-x-0 bg-primary-800/20 backdrop-blur-2xl rounded-t-[2.5rem] border border-primary-50/10 shadow-lg transition-all duration-300 ease-in-out translate-y-full will-change-transform",
             ctx.open && "translate-y-0 kui-animate-bounce",
           )}
         >
@@ -173,7 +173,7 @@ export function DrawerContent({
               window.addEventListener("touchend", handleTouchEnd);
             }}
           >
-            <div className="w-12 h-1.5 bg-secondary-950/20 rounded-full mx-auto mb-4" />
+            <div className="w-12 h-1.5 bg-primary-50/20 rounded-full mx-auto mb-4" />
           </div>
           {title && (
             <h2 className="text-xl px-4 font-bold mb-4 text-center">{title}</h2>

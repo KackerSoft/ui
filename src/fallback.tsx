@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from "react";
+import { cn } from "./helpers";
 
 export interface FallBackProps {
   loading: boolean;
@@ -48,13 +49,16 @@ export function FallbackSkeleton(props: { children: React.ReactNode }) {
 export function FallbackBone(props: {
   width?: string | number;
   height?: string | number;
+  className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <div
-      className="bg-primary-800 rounded-lg animate-pulse"
+      className={cn("bg-primary-800 rounded-lg animate-pulse", props.className)}
       style={{
         width: props.width || "100%",
         height: props.height || "20px",
+        ...props.style,
       }}
     />
   );

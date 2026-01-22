@@ -57,7 +57,7 @@ export default function Input(props: InputProps) {
     <div className={twMerge(`w-full`, outerClassName)}>
       <div
         className={twMerge(
-          `bg-primary-800/50 border-2 border-secondary-950/5 rounded-xl overflow-hidden flex items-stretch transition-all ring-0`,
+          `bg-primary-800/50 border-2 border-primary-50/5 rounded-xl overflow-hidden flex items-stretch transition-all ring-0`,
           inputIsActive && "border-accent-500",
           error && "border-red-500",
         )}
@@ -65,7 +65,7 @@ export default function Input(props: InputProps) {
         {props.left && (
           <div
             className={twMerge(
-              "bg-secondary-950/5 border-r border-r-secondary-950/5 px-3 flex justify-center items-center",
+              "bg-primary-50/5 border-r border-r-primary-50/5 px-3 flex justify-center items-center",
               inputIsActive && "bg-accent-500 text-primary-950",
               error && "bg-red-500 text-primary-950",
             )}
@@ -134,7 +134,7 @@ export default function Input(props: InputProps) {
         {props.right && (
           <div
             className={cn(
-              "bg-secondary-950/5 border-l border-l-secondary-950/5 px-3 flex justify-center items-center",
+              "bg-primary-50/5 border-l border-l-primary-50/5 px-3 flex justify-center items-center",
               inputIsActive && "bg-accent-500 text-primary-950",
               error && "bg-red-500 text-primary-950",
             )}

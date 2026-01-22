@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { cn } from "./helpers";
 import { FallbackBone } from "./fallback";
 import { registerBackHandler } from "./router/router";
+import { Portal } from "./portal";
 
 const getDimensions = (
   base64: string,
@@ -103,6 +104,7 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   errorFallback?: React.ReactNode;
   loadingFallback?: React.ReactNode;
   expandable?: boolean;
+  previewImage?: string;
 }
 
 export default forwardRef<HTMLImageElement, ImageProps>(
@@ -113,6 +115,7 @@ export default forwardRef<HTMLImageElement, ImageProps>(
       errorFallback,
       loadingFallback,
       expandable = false,
+      previewImage,
       ...rest
     } = props;
 
@@ -175,12 +178,13 @@ export default forwardRef<HTMLImageElement, ImageProps>(
     }, [expanded, imgRef]);
 
     useEffect(() => {
-      if (src) {
-        getDimensions(src).then((dimensions) => {
+      const imageToMeasure = previewImage || src;
+      if (imageToMeasure) {
+        getDimensions(imageToMeasure).then((dimensions) => {
           setImageDimensions(dimensions);
         });
       }
-    }, [src]);
+    }, [src, previewImage]);
 
     if (isLoading) {
       return loadingFallback || <FallbackBone width={"100%"} height={"100%"} />;
@@ -192,7 +196,7 @@ export default forwardRef<HTMLImageElement, ImageProps>(
           <div
             ref={ref}
             className={
-              "flex flex-col h-full w-full items-center justify-center text-secondary-950/50 gap-4 text-xs bg-primary-800"
+              "flex flex-col h-full w-full items-center justify-center text-primary-50/50 gap-4 text-xs bg-primary-800"
             }
           >
             <i className="fas fa-image-slash text-2xl " />
@@ -261,59 +265,64 @@ export default forwardRef<HTMLImageElement, ImageProps>(
           {...rest}
         />
         {expandable && src && imageBounds && (
-          <div
-            className={cn(
-              "fixed transition-all z-100 duration-500 ease-in-out overflow-hidden flex flex-col",
-              expanded && "bg-primary-900/40 backdrop-blur-2xl",
-            )}
-            style={{
-              ...imageBounds,
-            }}
-          >
+          <Portal>
             <div
               className={cn(
-                "pt-0 max-h-0 transition-all overflow-hidden px-4 delay-100 shrink-0",
-                imageBounds.top === 0 &&
-                  "max-h-[calc(80px+var(--safe-area-inset-top,1rem))] pt-[var(--safe-area-inset-top,1rem)] pb-4",
-                shouldControlsBeFixed && "fixed top-0 left-0 right-0",
+                "fixed transition-all z-100 duration-500 ease-in-out overflow-hidden flex flex-col",
+                expanded && "bg-primary-900/40 backdrop-blur-2xl",
               )}
+              style={{
+                ...imageBounds,
+              }}
             >
-              <button
-                className="flex items-center justify-center w-8 text-xl aspect-square rounded-lg "
-                onClick={() => {
-                  window.history.back();
-                }}
-              >
-                <i className="far fa-arrow-left" />
-              </button>
-            </div>
-            <div className="flex items-center justify-center flex-1">
               <div
-                className="transition-all duration-500 ease-in-out overflow-hidden"
-                style={{
-                  width:
-                    imageBounds.top === 0
-                      ? maxImageDimensions?.width + "px"
-                      : imageBounds.width + "px",
-                  height:
-                    imageBounds.top === 0
-                      ? maxImageDimensions?.height + "px"
-                      : imageBounds.height + "px",
-                  borderRadius: imageBounds.top === 0 ? "15px" : "0px",
-                }}
+                className={cn(
+                  "pt-0 max-h-0 transition-all overflow-hidden px-4 delay-100 shrink-0",
+                  imageBounds.top === 0 &&
+                    "max-h-[calc(80px+var(--safe-area-inset-top,1rem))] pt-[var(--safe-area-inset-top,1rem)] pb-4",
+                  shouldControlsBeFixed && "fixed top-0 left-0 right-0",
+                )}
               >
-                <img src={src} className="w-full h-full object-cover" />
+                <button
+                  className="flex items-center justify-center w-8 text-xl aspect-square rounded-lg "
+                  onClick={() => {
+                    window.history.back();
+                  }}
+                >
+                  <i className="far fa-arrow-left" />
+                </button>
               </div>
+              <div className="flex items-center justify-center flex-1">
+                <div
+                  className="transition-all duration-500 ease-in-out overflow-hidden"
+                  style={{
+                    width:
+                      imageBounds.top === 0
+                        ? maxImageDimensions?.width + "px"
+                        : imageBounds.width + "px",
+                    height:
+                      imageBounds.top === 0
+                        ? maxImageDimensions?.height + "px"
+                        : imageBounds.height + "px",
+                    borderRadius: imageBounds.top === 0 ? "15px" : "0px",
+                  }}
+                >
+                  <img
+                    src={previewImage || src}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <div
+                className={cn(
+                  "h-0 transition-all overflow-hidden delay-100 shrink-0",
+                  imageBounds.top === 0 &&
+                    "h-[var(--safe-area-inset-bottom,1rem)]",
+                  shouldControlsBeFixed && "fixed bottom-0 left-0 right-0",
+                )}
+              />
             </div>
-            <div
-              className={cn(
-                "h-0 transition-all overflow-hidden delay-100 shrink-0",
-                imageBounds.top === 0 &&
-                  "h-[var(--safe-area-inset-bottom,1rem)]",
-                shouldControlsBeFixed && "fixed bottom-0 left-0 right-0",
-              )}
-            />
-          </div>
+          </Portal>
         )}
       </>
     );
