@@ -31,6 +31,7 @@ import Chip from "./chip";
 import "src/index.css";
 import Slider from "./interactive/slider";
 import { SnapScroll, SnapScrollItem } from "./interactive/snap-scroll";
+import { Portal } from "./portal";
 
 export {
   Router,
@@ -70,4 +71,5 @@ export {
   Slider,
   SnapScroll,
   SnapScrollItem,
+  Portal,
 };

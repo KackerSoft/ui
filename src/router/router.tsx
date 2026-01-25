@@ -136,9 +136,7 @@ export default function Router(props: RouterProps) {
             ...prevStack,
             {
               path,
-              component: getCurrentRoute(path) || (
-                <div className="text-white">404 Not Found</div>
-              ),
+              component: getCurrentRoute(path) || undefined,
               status: "active",
               state: e.state.state,
             },
@@ -148,9 +146,7 @@ export default function Router(props: RouterProps) {
             ...prevStack.slice(0, -1),
             {
               path,
-              component: getCurrentRoute(path) || (
-                <div className="text-white">404 Not Found</div>
-              ),
+              component: getCurrentRoute(path) || undefined,
               status: "active",
               state: e.state.state,
             },
@@ -191,9 +187,7 @@ export default function Router(props: RouterProps) {
           ? [
               {
                 path: props.mainRoutes[0],
-                component: getCurrentRoute(props.mainRoutes[0]) || (
-                  <div className="text-white">404 Not Found</div>
-                ),
+                component: getCurrentRoute(props.mainRoutes[0]) || undefined,
                 status: "background",
                 state: null,
               } as ViewStack,
@@ -225,20 +219,57 @@ export default function Router(props: RouterProps) {
     }
   }, [path]);
 
-  // useEffect(() => {
-  //   const currentView = viewStack[viewStack.length - 2];
-  //   const nextView = viewStack[viewStack.length - 1];
-
-  //   setSucceedingComponent(nextView?.component || null);
-  // }, [viewStack]);
-
   const showNavBar = props.mainRoutes.includes(path);
 
-  // const mainPaths = props.mainRoutes;
+  const mainPaths = props.mainRoutes;
+
+  const currentMainPathIndex = mainPaths.findIndex((p) => p === path);
+
+  useEffect(() => {
+    if (currentMainPathIndex === -1) return;
+    const routerMainViews = document.getElementById("router-main-views");
+    if (routerMainViews) {
+      // scroll to the current main path
+      routerMainViews.scrollTo({
+        left: currentMainPathIndex * window.innerWidth,
+      });
+    }
+  }, [currentMainPathIndex]);
 
   return (
     <div className="h-screen relative overflow-hidden">
-      {viewStack.filter((v) => !!v.path).at(-1)?.component}
+      <div className="overflow-hidden flex" id="router-main-views">
+        {mainPaths.map((route) => (
+          <div
+            className="w-screen h-screen shrink-0"
+            key={route}
+            style={{
+              display: path === route ? "block" : "none",
+            }}
+          >
+            {viewStack.find((v) => v.path === route)?.component || (
+              <div className="w-screen h-screen bg-primary-950" />
+            )}
+          </div>
+        ))}
+      </div>
+      {viewStack
+
+        .filter((view) => !mainPaths.includes(view.path || ""))
+        .map((view, index) => {
+          return (
+            <div
+              key={index}
+              className="h-screen w-screen"
+              style={{
+                zIndex: 1000 + index,
+                display: view.path === path ? "block" : "none",
+              }}
+            >
+              {view.component}
+            </div>
+          );
+        })}
       <NavBar
         {...props.navBar}
         className={cn(

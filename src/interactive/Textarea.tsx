@@ -1,43 +1,149 @@
-import React from "react";
+import { cn } from "@/helpers";
+import React, { useEffect, useLayoutEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
-export type TextareaProps = React.DetailedHTMLProps<
+export type TextAreaProps = React.DetailedHTMLProps<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   HTMLTextAreaElement
 > & {
   right?: React.ReactNode;
   left?: React.ReactNode;
   error?: string;
-  label?: React.ReactNode;
   outerClassName?: string;
+  errorClassName?: string;
 };
 
-export default function Textarea(props: TextareaProps) {
-  const { error, label, className, outerClassName, ...rest } = props;
+export default function TextArea(props: TextAreaProps) {
+  const {
+    error,
+    className,
+    onInput,
+    onChange,
+    onFocus,
+    onBlur,
+    outerClassName,
+    errorClassName,
+    placeholder,
+    ...rest
+  } = props;
+
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // 1) Track focus
+  const [inputIsActive, setIsActive] = React.useState(false);
+
+  // 2) Track whether there is any content (works for both controlled/uncontrolled)
+  const initialHasValue =
+    (rest.value !== undefined && String(rest.value) !== "") ||
+    (rest.defaultValue !== undefined && String(rest.defaultValue) !== "");
+
+  const [hasValue, setHasValue] = React.useState(initialHasValue);
+
+  // If controlled, update when `value` changes
+  useLayoutEffect(() => {
+    if (rest.value !== undefined) setHasValue(String(rest.value ?? "") !== "");
+  }, [rest.value]);
+
+  // If uncontrolled, check the DOM value after mount
+  useEffect(() => {
+    if (rest.value === undefined && inputRef.current) {
+      setHasValue(inputRef.current.value !== "");
+    }
+  }, [rest.value]);
+
+  const isActive = inputIsActive || hasValue;
 
   return (
-    <div className={twMerge("w-full", outerClassName)}>
-      {label && <div className="text-sm mb-2 text-gray-500">{label}</div>}
-      <div className="bg-primary-800/20 border border-primary-50/10 rounded-lg overflow-hidden flex items-stretch">
+    <div className={twMerge(`w-full`, outerClassName)}>
+      <div
+        className={twMerge(
+          `bg-primary-800/50 border-2 border-primary-50/5 rounded-xl overflow-hidden flex items-stretch transition-all ring-0`,
+          inputIsActive && "border-accent-500",
+          error && "border-red-500",
+        )}
+      >
         {props.left && (
-          <div className="bg-primary-950/10 border-r border-r-primary-50/10 px-3 flex justify-center items-center">
+          <div
+            className={twMerge(
+              "bg-primary-50/5 border-r border-r-primary-50/5 px-3 flex justify-center items-center",
+              inputIsActive && "bg-accent-500 text-primary-950",
+              error && "bg-red-500 text-primary-950",
+            )}
+          >
             {props.left}
           </div>
         )}
-        <textarea
-          className={twMerge(
-            "w-full bg-transparent transition-all p-3 outline-0 focus:ring-2 ring-accent-500 ring-0 resize-none disabled:opacity-70",
-            className,
+
+        <div className="w-full relative">
+          {!!placeholder && (
+            <div
+              className={twMerge(
+                "absolute top-2.75 flex items-center justify-center left-3 opacity-60 transition-all pointer-events-none",
+                isActive && "top-1.5 text-[10px]",
+                inputIsActive && "opacity-100 text-accent-500",
+                error && "opacity-100 text-red-500",
+              )}
+            >
+              {placeholder}
+            </div>
           )}
-          {...rest}
-        />
+
+          <textarea
+            ref={inputRef}
+            className={twMerge(
+              "w-full bg-transparent transition-all px-3 py-2.75 outline-0 disabled:opacity-70 resize-none min-h-[3.5rem]",
+              className,
+              isActive && placeholder && "pt-4 pb-1.5",
+            )}
+            onInput={(e) => {
+              const el = e.target as HTMLTextAreaElement;
+              // Update hasValue for uncontrolled inputs
+              if (rest.value === undefined) setHasValue(el.value !== "");
+              onInput?.(e);
+            }}
+            onChange={(e) => {
+              // Update hasValue for uncontrolled inputs on change, too
+              if (rest.value === undefined) {
+                const el = e.target as HTMLTextAreaElement;
+                setHasValue(el.value !== "");
+              }
+              onChange?.(e);
+            }}
+            onFocus={(e) => {
+              setIsActive(true);
+              onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setIsActive(false);
+              // For uncontrolled, ensure final value is reflected
+              if (rest.value === undefined) {
+                const el = e.target as HTMLTextAreaElement;
+                setHasValue(el.value !== "");
+              }
+              onBlur?.(e);
+            }}
+            {...rest}
+          />
+        </div>
+
         {props.right && (
-          <div className="bg-primary-50/10 border-l border-l-primary-50/10 px-3 flex justify-center items-center">
+          <div
+            className={cn(
+              "bg-primary-50/5 border-l border-l-primary-50/5 px-3 flex justify-center items-center",
+              inputIsActive && "bg-accent-500 text-primary-950",
+              error && "bg-red-500 text-primary-950",
+            )}
+          >
             {props.right}
           </div>
         )}
       </div>
-      {props.error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+
+      {props.error && (
+        <div className={twMerge("text-red-500 text-xs mt-1", errorClassName)}>
+          {error}
+        </div>
+      )}
     </div>
   );
 }

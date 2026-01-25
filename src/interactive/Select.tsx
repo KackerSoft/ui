@@ -1,14 +1,18 @@
 import { twMerge } from "tailwind-merge";
 import { SwitchOption } from "./Switch";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/drawer";
 import { cn } from "@/helpers";
 import Input from "./Input";
 
+export type SelectOption<T extends string = string> = SwitchOption<T> & {
+  searchTerms?: string[];
+};
+
 export type SelectProps<T extends string> = {
   value?: T;
   onChange?: (value: T) => void;
-  options: SwitchOption<T>[];
+  options: SelectOption<T>[];
   className?: string;
   placeholder?: string;
   error?: string;
@@ -17,17 +21,19 @@ export type SelectProps<T extends string> = {
 export default function Select<T extends string>(props: SelectProps<T>) {
   const { value, onChange, options, className, placeholder, error } = props;
 
-  const valueOption: SwitchOption | undefined = options.find(
+  const valueOption: SelectOption | undefined = options.find(
     (option) => option.value === value,
   );
 
   const [search, setSearch] = useState("");
-  const searchOptions = options.filter((option) =>
-    option.label
-      ?.toString()
-      .toLowerCase()
-      .includes(search.toLowerCase().trim()),
-  );
+  const searchOptions = options.filter((option) => {
+    const term = search.toLowerCase().trim();
+    return (
+      option.label?.toString().toLowerCase().includes(term) ||
+      option.value?.toLowerCase().includes(term) ||
+      option.searchTerms?.some((st) => st.toLowerCase().includes(term))
+    );
+  });
   return (
     <>
       <Drawer>
