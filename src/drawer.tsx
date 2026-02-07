@@ -107,7 +107,7 @@ export function DrawerContent({
   return (
     <Portal>
       <div
-        className={cn("fixed inset-0 z-60 invisible", ctx.open && "visible")}
+        className={cn("fixed inset-0 z-6000 invisible", ctx.open && "visible")}
         onClick={(e) => {
           if (e.target === e.currentTarget) ctx.onClose();
         }}

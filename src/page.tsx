@@ -33,7 +33,7 @@ export default function Page(props: PageProps) {
       {header && (
         <div
           className={twMerge(
-            "flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 backdrop-blur-2xl px-4 rounded-b-2xl",
+            "flex items-center justify-between sticky top-0 pt-[var(--safe-area-inset-top,1rem)] z-10 inset-x-0 backdrop-blur-2xl px-4 rounded-b-2xl gap-2",
             platform === "android" &&
               "pt-[calc(var(--safe-area-inset-top,1rem)+1rem)]",
             header.transparent
@@ -41,9 +41,9 @@ export default function Page(props: PageProps) {
               : "bg-primary-950/50",
           )}
         >
-          <div className="pb-3">
+          <div className="pb-3 shrink-0">
             <button
-              className="flex items-center justify-center w-8 aspect-square rounded-lg"
+              className="flex items-center justify-center w-8 aspect-square rounded-lg "
               onClick={() => {
                 header.onBack?.();
                 goBack();
@@ -52,10 +52,10 @@ export default function Page(props: PageProps) {
               <i className="far fa-arrow-left" />
             </button>
           </div>
-          <div className="text-left w-full font-semibold text-lg p-4 pt-1">
+          <div className="text-left w-full font-semibold text-lg py-4 pt-1 flex-1 min-w-0 truncate">
             {header.title}
           </div>
-          <div className="pb-3">{header.action}</div>
+          <div className="pb-3 shrink-0">{header.action}</div>
         </div>
       )}
       <div className={className}>{children}</div>

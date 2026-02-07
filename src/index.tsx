@@ -32,6 +32,7 @@ import "src/index.css";
 import Slider from "./interactive/slider";
 import { SnapScroll, SnapScrollItem } from "./interactive/snap-scroll";
 import { Portal } from "./portal";
+import { Overlay, OverlayTrigger, OverlayContent } from "./overlay";
 
 export {
   Router,
@@ -72,4 +73,7 @@ export {
   SnapScroll,
   SnapScrollItem,
   Portal,
+  Overlay,
+  OverlayTrigger,
+  OverlayContent,
 };
