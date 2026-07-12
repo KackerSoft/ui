@@ -16,7 +16,7 @@ export interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: PageHeaderProps;
 }
 
-export default function Page(props: PageProps) {
+export default function Page(props: PageProps): React.JSX.Element {
   const { className, containerClassName, children, header, ...rest } = props;
 
   const platform = Capacitor.getPlatform();
@@ -63,7 +63,9 @@ export default function Page(props: PageProps) {
   );
 }
 
-export function PageHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+export function PageHeader(
+  props: React.HTMLAttributes<HTMLDivElement>,
+): React.JSX.Element {
   const { children, className, ...rest } = props;
   return (
     <div

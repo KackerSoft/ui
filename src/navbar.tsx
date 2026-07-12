@@ -7,7 +7,7 @@ export interface NavBarProps {
   className?: string;
 }
 
-export default function NavBar(props: NavBarProps) {
+export default function NavBar(props: NavBarProps): React.JSX.Element {
   const { links, className } = props;
   const path = usePath();
 

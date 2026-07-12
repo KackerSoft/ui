@@ -9,7 +9,7 @@ export type ButtonProps = React.DetailedHTMLProps<
   variant?: "accent" | "secondary" | "hollow" | "opaque" | "danger" | "warning";
 };
 
-export default function Button(props: ButtonProps) {
+export default function Button(props: ButtonProps): React.JSX.Element {
   const {
     loading,
     children,
