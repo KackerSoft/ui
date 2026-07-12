@@ -10,30 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '17'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Increment version
-        id: increment-version
-        run: |
-          npm run ver-sync increment
+        run: pnpm run ver-sync increment
 
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Update version"
+          git commit -m "Update version" || echo "No changes to commit"
           git push
-
-      #- name: Merge development -> staging
-      #  uses: devmasx/merge-branch@master
-      #  with:
-      #    type: now
-      #    from_branch: production
-      #    target_branch: master
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}

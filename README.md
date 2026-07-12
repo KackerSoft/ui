@@ -1,38 +1,92 @@
 # Kacker UI
 
+A standalone React component library built with Vite + Tailwind v4.
+
 ## Installation
 
-To install the dependencies, install the package using:
-
 ```bash
-bun install https://github.com/KackerSoft/ui.git
+pnpm add @kacker/ui
+# or
+npm i @kacker/ui
 ```
 
-## Development (local)
+In your app's entry file, import the bundled styles once:
 
-To develop and use the package simultaneously do the following steps:
+```ts
+import "@kacker/ui/style.css";
+```
 
-1. Install the package in your desired project with installation steps.
+## Local development against a consumer app
 
-2. In the project that you are using prepare the script:
-    ```bash
-    bun pm trust @kacker/ui
-    ```
-    This will build the package locally so that it can be used in your project.
+The workflow below uses pnpm's global link, which creates a symlink in your
+consumer app's `node_modules` **without modifying its `package.json`**. When you
+later run `pnpm install` in the consumer, the registry version is restored
+automatically — no cleanup needed before pushing.
 
-3. Run the following command in the kacker/ui project terminal:
-    ```bash
-    bun link
-    ```
+### One-time setup
 
-4. Run the following command generated using `bun link` in the project where you are using the kacker/ui package:
-    ```bash
-    bun link @kacker/ui
-    ```
+```bash
+# 1. In THIS repo (kacker_ui):
+pnpm install
+pnpm link --global
 
-5. Run the following command in the kacker/ui project terminal to build and use concurrently:
-    ```bash
-    bun dev
-    ```
+# 2. In the consumer app:
+pnpm link --global @kacker/ui
+```
 
-6. Start or run your project in which you are using the kacker/ui components. Happy Coding :).
+### Day-to-day
+
+```bash
+# In kacker_ui — rebuilds on every save into dist/
+pnpm dev
+
+# In the consumer app — start as usual
+pnpm dev
+```
+
+Any save here triggers a rebuild; the consumer's Vite dev server detects the
+change in its linked `node_modules/@kacker/ui` and reloads.
+
+### Recommended consumer Vite config (for clean HMR)
+
+Vite pre-bundles `node_modules` deps by default, which can blunt HMR for linked
+packages. Add this to the consumer's `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  optimizeDeps: {
+    exclude: ["@kacker/ui"],
+  },
+  server: {
+    watch: {
+      // follow the symlink so file changes are picked up
+      followSymlinks: true,
+    },
+  },
+});
+```
+
+### Unlinking
+
+```bash
+# In the consumer app:
+pnpm unlink --global @kacker/ui
+pnpm install   # restores the published version
+```
+
+## Scripts
+
+| Script          | Purpose                                   |
+| --------------- | ----------------------------------------- |
+| `pnpm dev`      | Build in watch mode (for local linking)   |
+| `pnpm build`    | Production build (ESM + CJS + d.ts + CSS) |
+| `pnpm ver-sync` | Bump patch version in `package.json`      |
+
+## Build output
+
+`dist/` contains:
+
+- `index.js` — ESM bundle
+- `index.cjs` — CommonJS bundle
+- `index.d.ts` — type declarations
+- `index.css` — bundled styles (consumer imports via `@kacker/ui/style.css`)

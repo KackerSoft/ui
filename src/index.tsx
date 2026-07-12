@@ -5,7 +5,7 @@ import Router, {
 } from "@/router/router";
 import Provider, { useTheme } from "@/provider";
 import Link from "@/link";
-import Page, { PageHeader } from "@/page";
+import Page, { PageHeader, HeaderActionButton } from "@/page";
 import Input from "./interactive/Input";
 import Button from "./interactive/buttons/Button";
 import { Drawer, DrawerTrigger, DrawerContent } from "./drawer";
@@ -76,4 +76,5 @@ export {
   Overlay,
   OverlayTrigger,
   OverlayContent,
+  HeaderActionButton,
 };
