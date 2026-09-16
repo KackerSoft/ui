@@ -1,10 +1,10 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "bun-react-template",
       "dependencies": {
-        "@capgo/capacitor-navigation-bar": "7.3.18",
         "bun-plugin-tailwind": "^0.0.14",
         "jotai": "^2.15.0",
         "tailwind-merge": "^3.3.1",
@@ -20,6 +20,7 @@
         "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
         "@capacitor/app": "^7.1.0",
         "@capacitor/status-bar": "^7.0.3",
+        "@capgo/capacitor-navigation-bar": "7.3.18",
         "@capgo/capacitor-updater": "^7.27.5",
         "react": "^19",
         "react-dom": "^19",

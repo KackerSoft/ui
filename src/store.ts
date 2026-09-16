@@ -14,3 +14,11 @@ export const currentBundleAtom = atomWithStorage<UpdateBundle | null>(
   `kui-current-bundle`,
   null,
 );
+// Tracks the native base build version that was active when `currentBundleAtom`
+// was set, so we can detect when the native app store build changes underneath
+// a previously downloaded OTA bundle (in either direction), even if the new
+// base build's version number is still lower than the bundle's version.
+export const currentBundleBaseBuildAtom = atomWithStorage<number | null>(
+  `kui-current-bundle-base-build`,
+  null,
+);
