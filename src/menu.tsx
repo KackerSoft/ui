@@ -13,7 +13,7 @@ export interface MenuProps {
   options: MenuItem[];
 }
 
-export default function Menu(props: MenuProps) {
+export default function Menu(props: MenuProps): React.JSX.Element {
   const { options } = props;
 
   return (

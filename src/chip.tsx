@@ -5,7 +5,7 @@ export default function Chip(
     icon?: string;
     content: React.ReactNode;
   },
-) {
+): React.JSX.Element {
   const { className, icon, content, ...rest } = props;
 
   return (

@@ -1,5 +1,9 @@
 import { useAtom } from "jotai";
-import { autoUpdateAtom, currentBundleAtom } from "./store";
+import {
+  autoUpdateAtom,
+  currentBundleAtom,
+  currentBundleBaseBuildAtom,
+} from "./store";
 import { useEffect, useState } from "react";
 import { App, AppInfo } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
@@ -78,22 +82,42 @@ export default function UpdateProvider(
   } = props;
   const [update, setUpdate] = useState<UpdateBundle | null>(null);
   const [currentBundle, setCurrentBundle] = useAtom(currentBundleAtom);
+  const [currentBundleBaseBuild, setCurrentBundleBaseBuild] = useAtom(
+    currentBundleBaseBuildAtom,
+  );
   const deviceInfo = useDeviceInfo();
   const platform = Capacitor.getPlatform();
 
   const currentVersion =
     currentBundle?.version || parseInt(deviceInfo?.build || "0");
 
-  // Check if base build is greater than current bundle version
-  // This can happen if the app auto-updates from the play store
+  // Check if the native base build has changed since the current OTA bundle
+  // was downloaded. This can happen if the app auto-updates from the app/play
+  // store, either to a newer build than the bundle (e.g. the bundle is stale)
+  // or to a build that still has a lower version number than the bundle
+  // (e.g. the bundle was downloaded on top of an older base build, and the
+  // store then pushed an intermediate native update). In either case the
+  // downloaded bundle no longer matches the native shell it was set on top
+  // of, so it must be discarded and the native base build treated as current.
   useEffect(() => {
-    if (platform === "web") return;
+    if (platform === "web" || !deviceInfo) return;
     const baseBuild = parseInt(deviceInfo?.build || "0");
-    if (currentBundle && baseBuild > currentBundle.version) {
-      // Reset current bundle as the base build is now newer
+    if (
+      currentBundle &&
+      (currentBundleBaseBuild === null || baseBuild !== currentBundleBaseBuild)
+    ) {
+      // Reset current bundle as the native base build has changed
       setCurrentBundle(null);
+      setCurrentBundleBaseBuild(null);
     }
-  }, [deviceInfo, currentBundle, platform, setCurrentBundle]);
+  }, [
+    deviceInfo,
+    currentBundle,
+    currentBundleBaseBuild,
+    platform,
+    setCurrentBundle,
+    setCurrentBundleBaseBuild,
+  ]);
 
   useEffect(() => {
     if (platform === "web") return;
@@ -108,6 +132,7 @@ export default function UpdateProvider(
       });
       await CapacitorUpdater.set(version);
       setCurrentBundle(update);
+      setCurrentBundleBaseBuild(parseInt(deviceInfo?.build || "0"));
     } catch (error) {
       console.error("Error setting update:", error);
     }

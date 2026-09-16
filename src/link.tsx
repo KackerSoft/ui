@@ -5,7 +5,7 @@ export default function Link(
   props: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
     activeClassName?: string;
   },
-) {
+): React.JSX.Element {
   const { activeClassName, className, onClick, ...rest } = props;
   const path = usePath();
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
