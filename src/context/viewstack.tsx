@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface ViewStack {
+  id: string;
   path?: string;
   component?: ReactNode;
   state?: any;

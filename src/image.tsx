@@ -135,6 +135,8 @@ export default forwardRef<HTMLImageElement, ImageProps>(
 
     const internalRef = useRef<HTMLImageElement>(null);
     const imgRef = ref || internalRef;
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const dragImageRef = useRef<HTMLDivElement>(null);
 
     // The most beautiful animation ive ever made in my life
     useEffect(() => {
@@ -249,6 +251,59 @@ export default forwardRef<HTMLImageElement, ImageProps>(
       (window.innerHeight - (maxImageDimensions?.height || 0)) / 2 >
       80 + safeAreaInsetTop;
 
+    // Drag the expanded preview down to dismiss it, mirroring the drawer's swipe-to-close gesture.
+    const handleDragTouchStart = (e: React.TouchEvent) => {
+      if (!expanded || imageBounds?.top !== 0) return;
+      const startY = e.touches[0].clientY;
+      const startX = e.touches[0].clientX;
+
+      if (dragImageRef.current) dragImageRef.current.style.transition = "none";
+      if (overlayRef.current) overlayRef.current.style.transition = "none";
+
+      const handleTouchMove = (moveEvent: TouchEvent) => {
+        const currentY = moveEvent.touches[0].clientY;
+        const currentX = moveEvent.touches[0].clientX;
+        const deltaY = Math.max(0, currentY - startY);
+        const deltaX = currentX - startX;
+
+        // Only allow vertical dragging
+        if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
+
+        if (dragImageRef.current) {
+          const scale = Math.max(0.8, 1 - deltaY / (window.innerHeight * 2));
+          dragImageRef.current.style.transform = `translateY(${deltaY}px) scale(${scale})`;
+        }
+        if (overlayRef.current) {
+          overlayRef.current.style.opacity = String(
+            Math.max(0, 1 - deltaY / 300),
+          );
+        }
+      };
+
+      const handleTouchEnd = (endEvent: TouchEvent) => {
+        const endY = endEvent.changedTouches[0].clientY;
+        const deltaY = endY - startY;
+
+        if (dragImageRef.current) dragImageRef.current.style.transition = "";
+        if (overlayRef.current) overlayRef.current.style.transition = "";
+
+        if (deltaY > 100) {
+          if (overlayRef.current) overlayRef.current.style.opacity = "";
+          if (dragImageRef.current) dragImageRef.current.style.transform = "";
+          window.history.back();
+        } else {
+          if (dragImageRef.current) dragImageRef.current.style.transform = "";
+          if (overlayRef.current) overlayRef.current.style.opacity = "";
+        }
+
+        window.removeEventListener("touchmove", handleTouchMove);
+        window.removeEventListener("touchend", handleTouchEnd);
+      };
+
+      window.addEventListener("touchmove", handleTouchMove);
+      window.addEventListener("touchend", handleTouchEnd);
+    };
+
     return (
       <>
         <img
@@ -267,8 +322,11 @@ export default forwardRef<HTMLImageElement, ImageProps>(
         {expandable && src && imageBounds && (
           <Portal>
             <div
+              ref={overlayRef}
               className={cn(
-                "fixed transition-all z-100 duration-500 ease-in-out overflow-hidden flex flex-col",
+                // Must render above the router's stacked page layers (z-index up to ~1002), or the
+                // expanded preview ends up hidden behind the current page.
+                "fixed transition-all z-2000 duration-500 ease-in-out overflow-hidden flex flex-col",
                 expanded && "bg-primary-900/40 backdrop-blur-2xl",
               )}
               style={{
@@ -294,7 +352,9 @@ export default forwardRef<HTMLImageElement, ImageProps>(
               </div>
               <div className="flex items-center justify-center flex-1">
                 <div
-                  className="transition-all duration-500 ease-in-out overflow-hidden"
+                  ref={dragImageRef}
+                  onTouchStart={handleDragTouchStart}
+                  className="transition-all duration-500 ease-in-out overflow-hidden will-change-transform"
                   style={{
                     width:
                       imageBounds.top === 0

@@ -1,0 +1,7 @@
+/* Consumers: @import "@kacker/ui/tailwind"; — pulls in this library's own
+   tokens/keyframes and tells Tailwind where to scan for its utility classes.
+   Ships verbatim into dist/, so paths below are relative to wherever this
+   file physically ends up (dist or, when linked locally, src). */
+@import "./index.css";
+@source "./";
+@source "../src";

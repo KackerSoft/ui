@@ -1,3 +1,59 @@
+/* Maps Tailwind's color tokens to the CSS vars Provider sets at runtime from a
+   Theme's `properties` (see provider.tsx) — the "primary"/"accent" shade scale
+   is part of this library's Theme contract, so consumers never redeclare it. */
+@theme {
+  --color-primary-50: var(--kui-color-primary-50);
+  --color-primary-100: var(--kui-color-primary-100);
+  --color-primary-200: var(--kui-color-primary-200);
+  --color-primary-300: var(--kui-color-primary-300);
+  --color-primary-400: var(--kui-color-primary-400);
+  --color-primary-500: var(--kui-color-primary-500);
+  --color-primary-600: var(--kui-color-primary-600);
+  --color-primary-700: var(--kui-color-primary-700);
+  --color-primary-800: var(--kui-color-primary-800);
+  --color-primary-900: var(--kui-color-primary-900);
+  --color-primary-950: var(--kui-color-primary-950);
+
+  --color-accent-50: var(--kui-color-accent-50);
+  --color-accent-100: var(--kui-color-accent-100);
+  --color-accent-200: var(--kui-color-accent-200);
+  --color-accent-300: var(--kui-color-accent-300);
+  --color-accent-400: var(--kui-color-accent-400);
+  --color-accent-500: var(--kui-color-accent-500);
+  --color-accent-600: var(--kui-color-accent-600);
+  --color-accent-700: var(--kui-color-accent-700);
+  --color-accent-800: var(--kui-color-accent-800);
+  --color-accent-900: var(--kui-color-accent-900);
+  --color-accent-950: var(--kui-color-accent-950);
+}
+
+.kui-animate-bounce {
+  animation: kui-animation-bounce-corners 0.5s ease-in-out;
+}
+
+@keyframes kui-animation-bounce-corners {
+  0% {
+    border-radius: 2.5rem 2.5rem 0 0;
+    transform: scale(0);
+  }
+  25% {
+    border-radius: 3rem 3rem 0 0;
+    transform: scale(1.02);
+  }
+  50% {
+    border-radius: 2rem 2rem 0 0;
+    transform: scale(0.99);
+  }
+  75% {
+    border-radius: 3rem 3rem 0 0;
+    transform: scale(1.01);
+  }
+  100% {
+    border-radius: 2.5rem 2.5rem 0 0;
+    transform: scale(1);
+  }
+}
+
 .__kui-slider {
   -webkit-appearance: none;
   /* Override default CSS styles */

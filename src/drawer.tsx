@@ -115,7 +115,7 @@ export function DrawerContent({
         <div
           ref={drawerContainerRef}
           className={cn(
-            "absolute bottom-0 inset-x-0 bg-primary-800/20 backdrop-blur-2xl rounded-t-[2.5rem] border border-primary-50/10 shadow-lg transition-all duration-300 ease-in-out translate-y-full will-change-transform",
+            "absolute bottom-0 inset-x-0 bg-primary-950/50 backdrop-blur-2xl rounded-t-[2.5rem] border border-primary-50/10 shadow-lg transition-all duration-300 ease-in-out translate-y-full will-change-transform",
             ctx.open && "translate-y-0 kui-animate-bounce",
           )}
         >

@@ -26,7 +26,7 @@ export function HeaderActionButton(
   return (
     <button
       className={twMerge(
-        "flex items-center justify-center w-12 text-xl aspect-square rounded-full border border-primary-50/10 backdrop-blur-sm",
+        "flex items-center justify-center w-10 aspect-square rounded-full bg-primary-900/30 border border-primary-50/10 backdrop-blur-sm",
         className,
       )}
       {...rest}
@@ -59,10 +59,10 @@ export default function Page(props: PageProps): React.JSX.Element {
             header.className,
           )}
         >
-          <div className="-z-10 bg-linear-to-b absolute inset-0 -bottom-10 mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm from-primary-950/50 to-transparent" />
+          <div className="-z-10 bg-linear-to-b absolute inset-0 mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm from-primary-950/80 to-transparent" />
           <div className="pb-3 shrink-0 absolute left-4 top-(--safe-area-inset-top,1rem) bottom-0 flex items-center">
             <button
-              className="flex items-center justify-center w-12 text-xl aspect-square rounded-full border border-primary-50/10 backdrop-blur-sm"
+              className="flex items-center justify-center w-10 aspect-square rounded-full border bg-primary-900/30 border-primary-50/10 backdrop-blur-sm"
               onClick={() => {
                 header.onBack?.();
                 goBack();

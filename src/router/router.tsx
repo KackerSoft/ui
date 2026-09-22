@@ -5,6 +5,10 @@ import { popStateAtom, viewStackAtom } from "@/store";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { App as CapacitorApp } from "@capacitor/app";
+import StackedPages from "./stackedPages";
+
+let viewStackIdCounter = 0;
+const nextViewStackId = () => `view-${++viewStackIdCounter}`;
 
 export interface Routes {
   [key: string]: (params: { [key: string]: string }) => React.ReactNode;
@@ -135,6 +139,7 @@ export default function Router(props: RouterProps) {
           return [
             ...prevStack,
             {
+              id: nextViewStackId(),
               path,
               component: getCurrentRoute(path) || undefined,
               status: "active",
@@ -145,6 +150,7 @@ export default function Router(props: RouterProps) {
           return [
             ...prevStack.slice(0, -1),
             {
+              id: nextViewStackId(),
               path,
               component: getCurrentRoute(path) || undefined,
               status: "active",
@@ -158,6 +164,7 @@ export default function Router(props: RouterProps) {
           return [
             ...prevStack,
             {
+              id: nextViewStackId(),
               status: "active",
               state: e.state.state,
             },
@@ -186,6 +193,7 @@ export default function Router(props: RouterProps) {
         ...(!props.mainRoutes.includes(initialPath)
           ? [
               {
+                id: nextViewStackId(),
                 path: props.mainRoutes[0],
                 component: getCurrentRoute(props.mainRoutes[0]) || undefined,
                 status: "background",
@@ -194,6 +202,7 @@ export default function Router(props: RouterProps) {
             ]
           : []),
         {
+          id: nextViewStackId(),
           path: initialPath,
           component: getCurrentRoute(initialPath) || (
             <div className="text-white">404 Not Found</div>
@@ -225,6 +234,20 @@ export default function Router(props: RouterProps) {
 
   const currentMainPathIndex = mainPaths.findIndex((p) => p === path);
 
+  // Pages pushed on top of a main tab (i.e. everything the slide-in/drag-to-close
+  // stack below handles). componentStateChange entries have no path and aren't
+  // real pages, so they're excluded here.
+  const stackViews = viewStack.filter(
+    (view) => view.path && !mainPaths.includes(view.path),
+  );
+  const mainEntry = [...viewStack]
+    .reverse()
+    .find((view) => view.path && mainPaths.includes(view.path));
+
+  // Kept visible (behind the stack) while a page is entering/exiting/being
+  // dragged and there's no other stacked page underneath to reveal instead.
+  const [revealMainPath, setRevealMainPath] = useState<string | null>(null);
+
   useEffect(() => {
     if (currentMainPathIndex === -1) return;
     const routerMainViews = document.getElementById("router-main-views");
@@ -244,7 +267,8 @@ export default function Router(props: RouterProps) {
             className="w-screen h-screen shrink-0"
             key={route}
             style={{
-              display: path === route ? "block" : "none",
+              display:
+                path === route || revealMainPath === route ? "block" : "none",
             }}
           >
             {viewStack.find((v) => v.path === route)?.component || (
@@ -253,23 +277,11 @@ export default function Router(props: RouterProps) {
           </div>
         ))}
       </div>
-      {viewStack
-
-        .filter((view) => !mainPaths.includes(view.path || ""))
-        .map((view, index) => {
-          return (
-            <div
-              key={index}
-              className="h-screen w-screen"
-              style={{
-                zIndex: 1000 + index,
-                display: view.path === path ? "block" : "none",
-              }}
-            >
-              {view.component}
-            </div>
-          );
-        })}
+      <StackedPages
+        stackViews={stackViews}
+        mainEntryPath={mainEntry?.path ?? null}
+        onRevealMain={setRevealMainPath}
+      />
       <NavBar
         {...props.navBar}
         className={cn(
