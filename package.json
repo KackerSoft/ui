@@ -31,6 +31,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
+    "prepare": "pnpm run build",
     "prepublishOnly": "pnpm run build",
     "ver-sync": "node scripts/sync-versions.cjs"
   },
