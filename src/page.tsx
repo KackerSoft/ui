@@ -40,6 +40,10 @@ export default function Page(props: PageProps): React.JSX.Element {
   const { className, containerClassName, children, header, ...rest } = props;
 
   const platform = Capacitor.getPlatform();
+  const headerTopOffset =
+    platform === "android"
+      ? "calc(var(--safe-area-inset-top,1rem) + 1rem)"
+      : "var(--safe-area-inset-top,1rem)";
 
   return (
     <div
@@ -53,14 +57,16 @@ export default function Page(props: PageProps): React.JSX.Element {
       {header && (
         <div
           className={twMerge(
-            "flex items-center justify-between sticky top-0 pt-(--safe-area-inset-top,1rem) z-10 inset-x-0 px-4 gap-2",
-            platform === "android" &&
-              "pt-[calc(var(--safe-area-inset-top,1rem)+1rem)]",
+            "flex items-center justify-between sticky top-0 z-10 inset-x-0 px-4 gap-2",
             header.className,
           )}
+          style={{ paddingTop: headerTopOffset }}
         >
           <div className="-z-10 bg-linear-to-b absolute inset-0 mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm from-primary-950/80 to-transparent" />
-          <div className="pb-3 shrink-0 absolute left-4 top-(--safe-area-inset-top,1rem) bottom-0 flex items-center">
+          <div
+            className="pb-3 shrink-0 absolute left-4 bottom-0 flex items-center"
+            style={{ top: headerTopOffset }}
+          >
             <button
               className="flex items-center justify-center w-10 aspect-square rounded-full border bg-primary-900/30 border-primary-50/10 backdrop-blur-sm"
               onClick={() => {
@@ -79,7 +85,10 @@ export default function Page(props: PageProps): React.JSX.Element {
           >
             {header.title}
           </div>
-          <div className="pb-3 shrink-0 absolute right-4 top-(--safe-area-inset-top,1rem) bottom-0 flex items-center">
+          <div
+            className="pb-3 shrink-0 absolute right-4 bottom-0 flex items-center"
+            style={{ top: headerTopOffset }}
+          >
             {header.action}
           </div>
         </div>

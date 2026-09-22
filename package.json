@@ -40,12 +40,12 @@
   },
   "peerDependencies": {
     "vite": "^6 || ^7 || ^8",
-    "@aashu-dubey/capacitor-statusbar-safe-area": "^4.0.0",
-    "@capacitor/app": "^7.1.0",
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/status-bar": "^7.0.3",
-    "@capgo/capacitor-navigation-bar": "7.3.18",
-    "@capgo/capacitor-updater": "^7.27.5",
+    "@aashu-dubey/capacitor-statusbar-safe-area": "^5.0.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/status-bar": "^8.0.3",
+    "@capgo/capacitor-navigation-bar": "8.2.9",
+    "@capgo/capacitor-updater": "^8.51.18",
     "react": "^19",
     "react-dom": "^19",
     "tailwindcss": "^4"
