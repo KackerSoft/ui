@@ -62,7 +62,13 @@ export default function Page(props: PageProps): React.JSX.Element {
           )}
           style={{ paddingTop: headerTopOffset }}
         >
-          <div className="-z-10 bg-linear-to-b absolute inset-0 mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm from-primary-950/80 to-transparent" />
+          <div
+            className="-z-10 absolute inset-0 mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm"
+            style={{
+              background:
+                "linear-gradient(to bottom, color-mix(in srgb, var(--color-primary-950) 80%, transparent), transparent)",
+            }}
+          />
           <div
             className="pb-3 shrink-0 absolute left-4 bottom-0 flex items-center"
             style={{ top: headerTopOffset }}
@@ -154,9 +160,13 @@ export function PageHeader(
     >
       <div
         className={cn(
-          "bg-linear-to-b mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm from-primary-950/50 to-transparent opacity-0 transition-all absolute inset-0 -z-10",
+          "mask-[linear-gradient(black,black,transparent)] backdrop-blur-sm opacity-0 transition-all absolute inset-0 -z-10",
           scrolled && "opacity-100",
         )}
+        style={{
+          background:
+            "linear-gradient(to bottom, color-mix(in srgb, var(--color-primary-950) 50%, transparent), transparent)",
+        }}
       />
       {children}
     </div>

@@ -35,66 +35,44 @@ export const useImage = (imageUrl?: string) => {
     setLoadingPercent(0);
     setError(false);
 
-    let objectUrl: string | null = null;
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", imageUrl, true);
-    xhr.responseType = "blob";
+    // Preload through an image element rather than XHR/fetch: image loads are
+    // not subject to CORS, so hosts/CDNs that omit Access-Control-Allow-Origin
+    // still work. Byte-level progress isn't observable this way, so
+    // loadingPercent only moves 0 -> 100.
+    let cancelled = false;
+    const img = new window.Image();
+    img.decoding = "async";
 
-    xhr.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        setLoadingPercent(percent);
-      }
+    img.onload = () => {
+      if (cancelled) return;
+      setImgSrc(imageUrl);
+      setLoadingPercent(100);
+      setError(false);
     };
 
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        const blob = xhr.response;
-
-        // Verify if it's an image by checking the MIME type
-        if (
-          !blob.type.startsWith("image/") &&
-          !blob.type.startsWith("application/octet-stream")
-        ) {
-          setError(true);
-          setLoadingPercent(null);
-          setImgSrc(null);
-          return;
-        }
-
-        objectUrl = URL.createObjectURL(blob);
-        setImgSrc(objectUrl);
-        setLoadingPercent(null);
-        setError(false);
-      } else {
-        // HTTP error (e.g., 404, 500)
-        setError(true);
-        setLoadingPercent(null);
-        setImgSrc(null);
-      }
-    };
-
-    xhr.onerror = () => {
-      // Network error or other errors before/during request
+    // Fires for network errors, HTTP errors and non-image responses alike
+    img.onerror = () => {
+      if (cancelled) return;
       setError(true);
-      setLoadingPercent(null); // Reset loading percent on error
+      setLoadingPercent(null);
       setImgSrc(null);
     };
 
-    xhr.send();
+    img.src = imageUrl;
 
     return () => {
-      xhr.abort(); // Abort ongoing request
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl); // Clean up the created blob URL
-      }
+      cancelled = true;
+      img.onload = null;
+      img.onerror = null;
+      // Abort the in-flight download
+      img.src = "";
     };
   }, [imageUrl]); // Re-run effect if imageUrl changes
 
   return {
     src: imgSrc,
     loadingPercent,
-    isLoading: loadingPercent !== null,
+    isLoading: loadingPercent !== null && loadingPercent < 100,
     isSuccess: loadingPercent === 100 && imgSrc !== null,
     isError: error,
   };

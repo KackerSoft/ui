@@ -63,6 +63,7 @@ export default function StackedPages(props: StackedPagesProps) {
   const prevLenRef = useRef(stackViews.length);
   const skipGhostRef = useRef(false);
   const dragTrackRef = useRef<DragTrack | null>(null);
+  const topPageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     onRevealMain(reveal === "floor" ? mainEntryPath : null);
@@ -152,6 +153,21 @@ export default function StackedPages(props: StackedPagesProps) {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!current || current.phase !== "resting" || dragPhase !== "idle") return;
+    dragTrackRef.current = null;
+    if (e.touches.length !== 1) return;
+
+    let target = e.target instanceof Element ? e.target : null;
+    while (target && target !== e.currentTarget) {
+      const { overflowX } = window.getComputedStyle(target);
+      if (
+        /^(auto|scroll|overlay)$/.test(overflowX) &&
+        target.scrollWidth > target.clientWidth
+      ) {
+        return;
+      }
+      target = target.parentElement;
+    }
+
     const touch = e.touches[0];
     dragTrackRef.current = {
       startX: touch.clientX,
@@ -163,40 +179,59 @@ export default function StackedPages(props: StackedPagesProps) {
     };
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const drag = dragTrackRef.current;
-    if (!drag) return;
-    const touch = e.touches[0];
-    const dx = touch.clientX - drag.startX;
-    const dy = touch.clientY - drag.startY;
+  useEffect(() => {
+    const page = topPageRef.current;
+    if (!page) return;
 
-    if (!drag.active) {
-      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
-      if (dx <= 0 || Math.abs(dy) > Math.abs(dx)) {
+    const handleTouchMove = (event: TouchEvent) => {
+      const drag = dragTrackRef.current;
+      if (!drag) return;
+      if (event.touches.length !== 1 || !event.cancelable) {
         dragTrackRef.current = null;
+        if (drag.active) setDragPhase("cancel");
         return;
       }
-      drag.active = true;
-      setReveal(belowView ?? "floor");
-      setDragPhase("dragging");
-    }
+      const touch = event.touches[0];
+      const dx = touch.clientX - drag.startX;
+      const dy = touch.clientY - drag.startY;
 
-    const dt = e.timeStamp - drag.lastT || 1;
-    drag.velocity = (touch.clientX - drag.lastX) / dt;
-    drag.lastX = touch.clientX;
-    drag.lastT = e.timeStamp;
+      if (!drag.active) {
+        if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+        if (dx <= 0 || Math.abs(dy) > Math.abs(dx)) {
+          dragTrackRef.current = null;
+          return;
+        }
+        drag.active = true;
+        setReveal(belowView ?? "floor");
+        setDragPhase("dragging");
+      }
 
-    setDragX(Math.max(0, Math.min(dx, window.innerWidth)));
-  };
+      event.preventDefault();
+      const dt = event.timeStamp - drag.lastT || 1;
+      drag.velocity = (touch.clientX - drag.lastX) / dt;
+      drag.lastX = touch.clientX;
+      drag.lastT = event.timeStamp;
 
-  const handleTouchEnd = () => {
+      setDragX(Math.max(0, Math.min(dx, window.innerWidth)));
+    };
+
+    page.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => {
+      page.removeEventListener("touchmove", handleTouchMove);
+      dragTrackRef.current = null;
+    };
+  }, [belowView, current?.view.id]);
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
     const drag = dragTrackRef.current;
     dragTrackRef.current = null;
     if (!drag || !drag.active) return;
 
     const dx = drag.lastX - drag.startX;
     const commit =
-      dx > window.innerWidth * COMMIT_RATIO || drag.velocity > COMMIT_VELOCITY;
+      event.type !== "touchcancel" &&
+      (dx > window.innerWidth * COMMIT_RATIO ||
+        drag.velocity > COMMIT_VELOCITY);
 
     setDragPhase(commit ? "commit" : "cancel");
   };
@@ -272,6 +307,7 @@ export default function StackedPages(props: StackedPagesProps) {
       {slots.map((slot) => (
         <div
           key={slot.key}
+          ref={slot.isTop ? topPageRef : undefined}
           onTransitionEnd={
             slot.isTop
               ? handleTopTransitionEnd
@@ -280,7 +316,6 @@ export default function StackedPages(props: StackedPagesProps) {
                 : undefined
           }
           onTouchStart={slot.isTop ? handleTouchStart : undefined}
-          onTouchMove={slot.isTop ? handleTouchMove : undefined}
           onTouchEnd={slot.isTop ? handleTouchEnd : undefined}
           onTouchCancel={slot.isTop ? handleTouchEnd : undefined}
           className="absolute inset-0 h-screen w-screen shadow-2xl will-change-transform"
